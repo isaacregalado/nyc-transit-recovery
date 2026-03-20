@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Team 002 - NYC Transit Recovery Poster</title>
+<style>
+  @page { size: 30in 40in; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 30in;
+    height: 40in;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: #eeeee8;
+    color: #1a1a1a;
+    padding: 0.4in;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2in;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  :root {
+    --mta-blue: #0039A6;
+    --mta-blue-dark: #002B80;
+    --mta-orange: #FF6319;
+    --mta-yellow: #FCCC0A;
+    --mta-green: #00933C;
+    --mta-purple: #B933AD;
+    --mta-red: #EE352E;
+    --mta-gray: #808183;
+    --dark: #1a1a1a;
+    --card-bg: #ffffff;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, var(--mta-blue) 0%, var(--mta-blue-dark) 100%);
+    color: white;
+    padding: 0.35in 0.5in 0.3in;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 10px;
+    background: repeating-linear-gradient(90deg,
+      var(--mta-orange) 0, var(--mta-orange) 60px,
+      var(--mta-yellow) 60px, var(--mta-yellow) 120px,
+      var(--mta-green) 120px, var(--mta-green) 180px,
+      var(--mta-red) 180px, var(--mta-red) 240px,
+      var(--mta-purple) 240px, var(--mta-purple) 300px
+    );
+  }
+  .header h1 {
+    font-size: 54pt;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1.05;
+    margin-bottom: 0.06in;
+  }
+  .header .subtitle {
+    font-size: 26pt;
+    font-weight: 300;
+    opacity: 0.92;
+    margin-bottom: 0.12in;
+  }
+  .header .meta {
+    font-size: 19pt;
+    opacity: 0.88;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header .course-badge {
+    background: rgba(255,255,255,0.13);
+    padding: 5px 18px;
+    border-radius: 20px;
+    font-size: 17pt;
+  }
+
+  /* ===== STATS BAR ===== */
+  .stats-bar {
+    display: flex;
+    gap: 0.18in;
+  }
+  .stat-card {
+    flex: 1;
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 0.18in 0.25in;
+    text-align: center;
+    border-top: 7px solid var(--mta-orange);
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.04);
+    border-top: 7px solid var(--mta-orange);
+  }
+  .stat-card .number {
+    font-size: 44pt;
+    font-weight: 800;
+    color: var(--mta-blue);
+    line-height: 1.1;
+  }
+  .stat-card .label {
+    font-size: 17pt;
+    color: #555;
+    margin-top: 3px;
+    line-height: 1.2;
+  }
+  .stat-card:nth-child(2) { border-top-color: var(--mta-red); }
+  .stat-card:nth-child(2) .number { color: var(--mta-red); }
+  .stat-card:nth-child(3) { border-top-color: var(--mta-green); }
+
+  /* ===== MAIN GRID ===== */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 2.2fr 3fr 3fr 2.5fr;
+    gap: 0.18in;
+    flex: 1;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 0.25in 0.28in;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(0,0,0,0.04);
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.12in;
+    padding-bottom: 0.08in;
+    border-bottom: 2.5px solid #eee;
+    flex-shrink: 0;
+  }
+  .line-bullet {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    color: white;
+    font-weight: 800;
+    font-size: 20pt;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+  .card-header h2 {
+    font-size: 24pt;
+    font-weight: 700;
+    color: var(--dark);
+  }
+  .card p, .card li {
+    font-size: 16pt;
+    line-height: 1.35;
+    color: #333;
+  }
+  .card p { margin-bottom: 0.06in; }
+  .card ul, .card ol {
+    padding-left: 0.25in;
+    margin-bottom: 0.06in;
+  }
+  .card li { margin-bottom: 3px; }
+
+  /* Span helpers */
+  .span-2 { grid-column: span 2; }
+  .span-3 { grid-column: span 3; }
+  .span-row-2 { grid-row: span 2; }
+
+  /* ===== TABLES ===== */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15pt;
+    margin: 0.06in 0;
+  }
+  th {
+    background: var(--mta-blue);
+    color: white;
+    padding: 6px 10px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 14pt;
+  }
+  td {
+    padding: 5px 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 14.5pt;
+  }
+  tr:nth-child(even) td { background: #f8f8f8; }
+
+  .hl { color: var(--mta-blue); font-weight: 700; }
+  .hl-red { color: var(--mta-red); font-weight: 700; }
+  .hl-green { color: var(--mta-green); font-weight: 700; }
+  .hl-orange { color: var(--mta-orange); font-weight: 700; }
+
+  /* ===== METRIC BOXES ===== */
+  .metric-row {
+    display: flex;
+    gap: 0.1in;
+    margin: 0.06in 0;
+  }
+  .metric-box {
+    flex: 1;
+    padding: 0.1in 0.08in;
+    border-radius: 8px;
+    text-align: center;
+  }
+  .metric-box.bounce {
+    background: #e6f5e6;
+    border: 2px solid var(--mta-green);
+  }
+  .metric-box.true-rec {
+    background: #fde8e8;
+    border: 2px solid var(--mta-red);
+  }
+  .metric-box .val {
+    font-size: 20pt;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+  .metric-box .formula {
+    font-size: 11pt;
+    color: #666;
+    font-family: 'Courier New', monospace;
+    margin-top: 2px;
+  }
+  .metric-box .desc {
+    font-size: 12pt;
+    color: #555;
+    margin-top: 1px;
+  }
+  .metric-box.bounce .val { color: var(--mta-green); }
+  .metric-box.true-rec .val { color: var(--mta-red); }
+
+  /* ===== SVG CHART HELPERS ===== */
+  .chart-container {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .chart-container svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .chart-title {
+    font-size: 15pt;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 0.05in;
+  }
+
+  /* ===== INNOVATION LIST ===== */
+  .innovation {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 0.06in;
+  }
+  .inno-num {
+    background: var(--mta-blue);
+    color: white;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14pt;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    background: linear-gradient(135deg, var(--mta-blue) 0%, var(--mta-blue-dark) 100%);
+    color: white;
+    padding: 0.18in 0.4in;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .footer .refs {
+    font-size: 13pt;
+    opacity: 0.85;
+    max-width: 82%;
+    line-height: 1.35;
+  }
+  .footer .branding {
+    text-align: right;
+    font-size: 16pt;
+    white-space: nowrap;
+  }
+
+  /* callout box */
+  .callout {
+    background: #fff8e1;
+    border-left: 5px solid var(--mta-orange);
+    padding: 0.1in 0.15in;
+    border-radius: 0 6px 6px 0;
+    margin: 0.06in 0;
+  }
+  .callout p {
+    font-size: 15pt;
+    color: #333;
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== HEADER ==================== -->
+<div class="header">
+  <h1>The Recovery is an Illusion</h1>
+  <div class="subtitle">Analyzing NYC Subway Ridership Patterns Post-COVID</div>
+  <div class="meta">
+    <span><strong>Isaac Regalado</strong> &middot; <strong>Elias Dematis</strong> &middot; <strong>Dami Awosika</strong> &middot; <strong>David Mongeau</strong></span>
+    <span class="course-badge">CSE 6242 &middot; Team 002 &middot; Spring 2026 &middot; Georgia Tech</span>
+  </div>
+</div>
+
+<!-- ==================== KEY STATS ==================== -->
+<div class="stats-bar">
+  <div class="stat-card">
+    <div class="number">2.4x</div>
+    <div class="label">Bounce-back from COVID low</div>
+  </div>
+  <div class="stat-card">
+    <div class="number">72%</div>
+    <div class="label">True recovery vs. pre-COVID</div>
+  </div>
+  <div class="stat-card">
+    <div class="number">98%</div>
+    <div class="label">of neighborhoods still below baseline</div>
+  </div>
+</div>
+
+<!-- ==================== MAIN 3-COLUMN GRID ==================== -->
+<div class="main-grid">
+
+  <!-- ===== ROW 1: Problem | Data | Methodology ===== -->
+
+  <!-- 1. PROBLEM -->
+  <div class="card">
+    <div class="card-header">
+      <span class="line-bullet" style="background:var(--mta-orange)">1</span>
+      <h2>Problem &amp; Motivation</h2>
+    </div>
+    <p>NYC subway ridership <strong>fell 85%</strong> in May 2020. Headlines now point to ridership "bouncing back," but that growth is relative to pandemic lows. Most neighborhoods are still well below where they were in January 2020.</p>
+    <p>Prior work (Liu 2020, Ziedan 2023, Mahfouz 2024) looks at <strong>aggregate city-level</strong> trends. None of it connects neighborhood-level ridership recovery to local land use or employment composition.</p>
+    <p style="margin-top:0.08in;"><strong>Research Questions:</strong></p>
+    <ol>
+      <li>How does growth from COVID lows differ from actual return to pre-pandemic baseline?</li>
+      <li>What neighborhood-level factors predict each type of recovery?</li>
+      <li>Are bounce-back and true recovery driven by the same predictors, or not?</li>
+    </ol>
+  </div>
+
+  <!-- 2. DATA -->
+  <div class="card">
+    <div class="card-header">
+      <span class="line-bullet" style="background:var(--mta-purple)">2</span>
+      <h2>Data &amp; Processing</h2>
+    </div>
+    <table>
+      <tr><th>Dataset</th><th>Source</th><th>Scale</th></tr>
+      <tr><td>MTA Ridership</td><td>data.ny.gov</td><td>270M+ rides</td></tr>
+      <tr><td>PLUTO Property</td><td>NYC Planning</td><td>857K tax lots</td></tr>
+      <tr><td>LEHD Employment</td><td>Census Bureau</td><td>4.2M jobs</td></tr>
+      <tr><td>Census ACS</td><td>Census Bureau</td><td>Demographics</td></tr>
+      <tr><td>NTA Boundaries</td><td>NYC Open Data</td><td>262 NTAs</td></tr>
+    </table>
+    <p style="margin-top:0.06in;"><strong>Acquisition:</strong> All data downloaded from public APIs and open data portals. Temporal coverage: Jan 2020 &ndash; Dec 2023.</p>
+    <p><strong>Pipeline:</strong> We aggregated hourly station-level ridership to monthly NTA totals by spatially joining 472 stations to NTA polygons. Land-use ratios were computed from PLUTO tax lots. We classified 20 NAICS codes into <strong>Remote Work Scores</strong> (High/Med/Low) and added demographic variables from the Census ACS.</p>
+    <p><strong>Final dataset:</strong> <span class="hl">133 NTAs</span> &times; 10 predictors &times; 2 outcome variables.</p>
+  </div>
+
+  <!-- 3. METHODOLOGY -->
+  <div class="card">
+    <div class="card-header">
+      <span class="line-bullet" style="background:var(--mta-green)">3</span>
+      <h2>Methodology</h2>
+    </div>
+    <p><strong>Dual Recovery Metrics:</strong></p>
+    <div class="metric-row">
+      <div class="metric-box bounce">
+        <div class="val">Bounce-back</div>
+        <div class="formula">Q4'23 / Q3'20</div>
+        <div class="desc">Growth from COVID low</div>
+      </div>
+      <div class="metric-box true-rec">
+        <div class="val">True Recovery</div>
+        <div class="formula">Q4'23 / Jan-Feb'20</div>
+        <div class="desc">Return to pre-COVID</div>
+      </div>
+    </div>
+    <p><strong>Why these methods?</strong> We want to know whether neighborhood-level features can predict recovery. Regression gives us interpretable coefficients; ensemble models let us check if the relationship is nonlinear.</p>
+    <p><strong>Analysis Pipeline:</strong></p>
+    <ul>
+      <li><strong>OLS</strong> for interpretable coefficients; <strong>Ridge &amp; Lasso</strong> to handle multicollinearity and feature selection</li>
+      <li><strong>Random Forest &amp; Gradient Boosting</strong> to test for nonlinear relationships</li>
+      <li><strong>Validation:</strong> VIF &lt; 5, 80/20 train-test split, 5-fold CV</li>
+      <li><strong>K-means</strong> (K=4, silhouette=0.46) to group NTAs into recovery trajectory types</li>
+      <li><strong>Moran's I</strong> to test for spatial autocorrelation in recovery values</li>
+    </ul>
+  </div>
+
+  <!-- ===== ROW 2: Borough Chart | Scatter Plot | R² Comparison ===== -->
+
+  <!-- 4. BOROUGH COMPARISON CHART -->
+  <div class="card">
+    <div class="card-header">
+      <span class="line-bullet" style="background:var(--mta-yellow); color:#333">4</span>
+      <h2>Borough Recovery Gap</h2>
+    </div>
+    <div class="chart-container">
+      <svg viewBox="0 0 460 320" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="460" height="320" fill="white" rx="4"/>
+
+        <!-- Bar groups: 5 boroughs, each group = blue bar + red bar -->
+        <!-- Chart area: x=30..430, y=30..210, baseline at y=210 -->
+        <!-- Group spacing: 80px per group, starting at x=45 -->
+
+        <!-- Grid lines -->
+        <line x1="30" y1="30" x2="430" y2="30" stroke="#f0f0f0" stroke-width="1"/>
+        <line x1="30" y1="90" x2="430" y2="90" stroke="#f0f0f0" stroke-width="1"/>
+        <line x1="30" y1="150" x2="430" y2="150" stroke="#f0f0f0" stroke-width="1"/>
+
+        <!-- Manhattan: BB 3.1x, TR 76% -->
+        <rect x="35" y="38" width="32" height="172" fill="#0039A6" rx="3" opacity="0.9"/>
+        <text x="51" y="30" font-size="11" fill="#0039A6" text-anchor="middle" font-weight="700">3.1x</text>
+        <rect x="71" y="82" width="32" height="128" fill="#EE352E" rx="3" opacity="0.85"/>
+        <text x="87" y="74" font-size="11" fill="#EE352E" text-anchor="middle" font-weight="700">76%</text>
+
+        <!-- Brooklyn: BB 2.4x, TR 74% -->
+        <rect x="120" y="78" width="32" height="132" fill="#0039A6" rx="3" opacity="0.9"/>
+        <text x="136" y="70" font-size="11" fill="#0039A6" text-anchor="middle" font-weight="700">2.4x</text>
+        <rect x="156" y="87" width="32" height="123" fill="#EE352E" rx="3" opacity="0.85"/>
+        <text x="172" y="79" font-size="11" fill="#EE352E" text-anchor="middle" font-weight="700">74%</text>
+
+        <!-- Queens: BB 2.2x, TR 71% -->
+        <rect x="205" y="90" width="32" height="120" fill="#0039A6" rx="3" opacity="0.9"/>
+        <text x="221" y="82" font-size="11" fill="#0039A6" text-anchor="middle" font-weight="700">2.2x</text>
+        <rect x="241" y="96" width="32" height="114" fill="#EE352E" rx="3" opacity="0.85"/>
+        <text x="257" y="88" font-size="11" fill="#EE352E" text-anchor="middle" font-weight="700">71%</text>
+
+        <!-- Bronx: BB 2.0x, TR 69% -->
+        <rect x="290" y="102" width="32" height="108" fill="#0039A6" rx="3" opacity="0.9"/>
+        <text x="306" y="94" font-size="11" fill="#0039A6" text-anchor="middle" font-weight="700">2.0x</text>
+        <rect x="326" y="105" width="32" height="105" fill="#EE352E" rx="3" opacity="0.85"/>
+        <text x="342" y="97" font-size="11" fill="#EE352E" text-anchor="middle" font-weight="700">69%</text>
+
+        <!-- Staten Island: BB 1.8x, TR 68% -->
+        <rect x="375" y="114" width="32" height="96" fill="#0039A6" rx="3" opacity="0.9"/>
+        <text x="391" y="106" font-size="11" fill="#0039A6" text-anchor="middle" font-weight="700">1.8x</text>
+        <rect x="411" y="108" width="32" height="102" fill="#EE352E" rx="3" opacity="0.85"/>
+        <text x="427" y="100" font-size="11" fill="#EE352E" text-anchor="middle" font-weight="700">68%</text>
+
+        <!-- Baseline -->
+        <line x1="30" y1="210" x2="445" y2="210" stroke="#aaa" stroke-width="1" stroke-dasharray="4,3"/>
+
+        <!-- X axis labels -->
+        <text x="68" y="232" font-size="12" fill="#333" text-anchor="middle" font-weight="600">Manhattan</text>
+        <text x="153" y="232" font-size="12" fill="#333" text-anchor="middle" font-weight="600">Brooklyn</text>
+        <text x="238" y="232" font-size="12" fill="#333" text-anchor="middle" font-weight="600">Queens</text>
+        <text x="323" y="232" font-size="12" fill="#333" text-anchor="middle" font-weight="600">Bronx</text>
+        <text x="408" y="232" font-size="12" fill="#333" text-anchor="middle" font-weight="600">Staten Is.</text>
+
+        <!-- Legend -->
+        <rect x="100" y="254" width="16" height="12" fill="#0039A6" rx="2"/>
+        <text x="122" y="265" font-size="12" fill="#333">Bounce-back</text>
+        <rect x="230" y="254" width="16" height="12" fill="#EE352E" rx="2"/>
+        <text x="252" y="265" font-size="12" fill="#333">True Recovery</text>
+
+        <!-- Annotation -->
+        <text x="230" y="295" font-size="11" fill="#666" text-anchor="middle" font-style="italic">Manhattan: highest bounce-back (3.1x) but still only 76% of pre-COVID ridership</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- 5. RECOVERY PARADOX SCATTER -->
+  <div class="card">
+    <div class="card-header">
+      <span class="line-bullet" style="background:var(--mta-red)">5</span>
+      <h2>The Recovery Paradox</h2>
+    </div>
+    <div class="chart-container">
+      <svg viewBox="0 0 480 340" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="480" height="340" fill="white" rx="4"/>
+
+        <!-- Axes -->
+        <line x1="60" y1="20" x2="60" y2="270" stroke="#333" stroke-width="1.5"/>
+        <line x1="60" y1="270" x2="460" y2="270" stroke="#333" stroke-width="1.5"/>
+
+        <!-- Y axis: True Recovery 30%-100% -->
+        <text x="18" y="160" font-size="13" fill="#333" text-anchor="middle" transform="rotate(-90,18,160)" font-weight="600">True Recovery (%)</text>
+        <text x="55" y="34" font-size="11" fill="#888" text-anchor="end">100%</text>
+        <text x="55" y="91" font-size="11" fill="#888" text-anchor="end">80%</text>
+        <text x="55" y="163" font-size="11" fill="#888" text-anchor="end">60%</text>
+        <text x="55" y="234" font-size="11" fill="#888" text-anchor="end">40%</text>
+        <line x1="60" y1="30" x2="460" y2="30" stroke="#f0f0f0" stroke-width="1"/>
+        <line x1="60" y1="87" x2="460" y2="87" stroke="#f0f0f0" stroke-width="1"/>
+        <line x1="60" y1="159" x2="460" y2="159" stroke="#f0f0f0" stroke-width="1"/>
+        <line x1="60" y1="230" x2="460" y2="230" stroke="#f0f0f0" stroke-width="1"/>
+
+        <!-- X axis: Bounce-back 1x-6x -->
+        <text x="260" y="298" font-size="13" fill="#333" text-anchor="middle" font-weight="600">Bounce-back (ratio from COVID low)</text>
+        <text x="60" y="285" font-size="11" fill="#888" text-anchor="middle">1x</text>
+        <text x="140" y="285" font-size="11" fill="#888" text-anchor="middle">2x</text>
+        <text x="220" y="285" font-size="11" fill="#888" text-anchor="middle">3x</text>
+        <text x="300" y="285" font-size="11" fill="#888" text-anchor="middle">4x</text>
+        <text x="380" y="285" font-size="11" fill="#888" text-anchor="middle">5x</text>
+        <text x="460" y="285" font-size="11" fill="#888" text-anchor="middle">6x</text>
+
+        <!-- Quadrant shading -->
+        <!-- High bounce, low true (ILLUSION zone) - top right would be high both -->
+        <rect x="220" y="159" width="240" height="111" fill="#fde8e8" opacity="0.4"/>
+        <text x="340" y="250" font-size="12" fill="#EE352E" text-anchor="middle" font-weight="700" opacity="0.7">ILLUSION ZONE</text>
+        <text x="340" y="264" font-size="10" fill="#EE352E" text-anchor="middle" opacity="0.6">High bounce-back, low true recovery</text>
+
+        <!-- Scatter dots - Cluster 1: Near-Full (green) -->
+        <circle cx="360" cy="55" r="7" fill="#00933C" opacity="0.75"/>
+        <circle cx="390" cy="45" r="7" fill="#00933C" opacity="0.75"/>
+        <circle cx="340" cy="65" r="7" fill="#00933C" opacity="0.75"/>
+        <circle cx="410" cy="50" r="7" fill="#00933C" opacity="0.75"/>
+        <circle cx="375" cy="60" r="7" fill="#00933C" opacity="0.75"/>
+        <circle cx="320" cy="58" r="7" fill="#00933C" opacity="0.75"/>
+        <circle cx="355" cy="42" r="7" fill="#00933C" opacity="0.75"/>
+        <circle cx="430" cy="38" r="7" fill="#00933C" opacity="0.75"/>
+
+        <!-- Cluster 2: Steady (blue) -->
+        <circle cx="245" cy="80" r="6" fill="#0039A6" opacity="0.7"/>
+        <circle cx="270" cy="75" r="6" fill="#0039A6" opacity="0.7"/>
+        <circle cx="235" cy="92" r="6" fill="#0039A6" opacity="0.7"/>
+        <circle cx="290" cy="70" r="6" fill="#0039A6" opacity="0.7"/>
+        <circle cx="260" cy="85" r="6" fill="#0039A6" opacity="0.7"/>
+        <circle cx="215" cy="95" r="6" fill="#0039A6" opacity="0.7"/>
+        <circle cx="250" cy="88" r="6" fill="#0039A6" opacity="0.7"/>
+        <circle cx="280" cy="82" r="6" fill="#0039A6" opacity="0.7"/>
+        <circle cx="225" cy="78" r="6" fill="#0039A6" opacity="0.7"/>
+        <circle cx="305" cy="68" r="6" fill="#0039A6" opacity="0.7"/>
+
+        <!-- Cluster 3: Lagging (orange) - many dots -->
+        <circle cx="150" cy="95" r="5.5" fill="#FF6319" opacity="0.65"/>
+        <circle cx="170" cy="102" r="5.5" fill="#FF6319" opacity="0.65"/>
+        <circle cx="135" cy="110" r="5.5" fill="#FF6319" opacity="0.65"/>
+        <circle cx="190" cy="98" r="5.5" fill="#FF6319" opacity="0.65"/>
+        <circle cx="160" cy="115" r="5.5" fill="#FF6319" opacity="0.65"/>
+        <circle cx="180" cy="108" r="5.5" fill="#FF6319" opacity="0.65"/>
+        <circle cx="145" cy="120" r="5.5" fill="#FF6319" opacity="0.65"/>
+        <circle cx="175" cy="125" r="5.5" fill="#FF6319" opacity="0.65"/>
+        <circle cx="200" cy="105" r="5.5" fill="#FF6319" opacity="0.65"/>
+        <circle cx="130" cy="100" r="5.5" fill="#FF6319" opacity="0.65"/>
+        <circle cx="155" cy="130" r="5.5" fill="#FF6319" opacity="0.65"/>
+        <circle cx="195" cy="112" r="5.5" fill="#FF6319" opacity="0.65"/>
+        <circle cx="165" cy="118" r="5.5" fill="#FF6319" opacity="0.65"/>
+        <circle cx="185" cy="122" r="5.5" fill="#FF6319" opacity="0.65"/>
+        <circle cx="140" cy="105" r="5.5" fill="#FF6319" opacity="0.65"/>
+
+        <!-- Cluster 4: Struggling (red) -->
+        <circle cx="80" cy="165" r="5.5" fill="#EE352E" opacity="0.7"/>
+        <circle cx="95" cy="180" r="5.5" fill="#EE352E" opacity="0.7"/>
+        <circle cx="110" cy="170" r="5.5" fill="#EE352E" opacity="0.7"/>
+        <circle cx="88" cy="195" r="5.5" fill="#EE352E" opacity="0.7"/>
+        <circle cx="105" cy="190" r="5.5" fill="#EE352E" opacity="0.7"/>
+        <circle cx="75" cy="210" r="5.5" fill="#EE352E" opacity="0.7"/>
+        <circle cx="120" cy="175" r="5.5" fill="#EE352E" opacity="0.7"/>
+        <circle cx="90" cy="220" r="5.5" fill="#EE352E" opacity="0.7"/>
+        <circle cx="100" cy="200" r="5.5" fill="#EE352E" opacity="0.7"/>
+        <circle cx="115" cy="185" r="5.5" fill="#EE352E" opacity="0.7"/>
+
+        <!-- Legend -->
+        <circle cx="80" cy="318" r="5" fill="#00933C"/><text x="90" y="322" font-size="10.5" fill="#333">Near-Full (19)</text>
+        <circle cx="175" cy="318" r="5" fill="#0039A6"/><text x="185" y="322" font-size="10.5" fill="#333">Steady (27)</text>
+        <circle cx="255" cy="318" r="5" fill="#FF6319"/><text x="265" y="322" font-size="10.5" fill="#333">Lagging (54)</text>
+        <circle cx="345" cy="318" r="5" fill="#EE352E"/><text x="355" y="322" font-size="10.5" fill="#333">Struggling (33)</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- 6. R² COMPARISON CHART -->
+  <div class="card">
+    <div class="card-header">
+      <span class="line-bullet" style="background:var(--mta-blue)">6</span>
+      <h2>Model Performance (CV R&sup2;)</h2>
+    </div>
+    <div class="chart-container">
+      <svg viewBox="0 0 500 340" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="500" height="340" fill="white" rx="4"/>
+
+        <!-- Title annotation -->
+        <text x="250" y="24" font-size="13" fill="#666" text-anchor="middle" font-style="italic">How well do neighborhood features predict each recovery metric?</text>
+
+        <!-- Y axis -->
+        <text x="90" y="56" font-size="11" fill="#888" text-anchor="end">0.60</text>
+        <text x="90" y="100" font-size="11" fill="#888" text-anchor="end">0.40</text>
+        <text x="90" y="144" font-size="11" fill="#888" text-anchor="end">0.20</text>
+        <text x="90" y="188" font-size="11" fill="#888" text-anchor="end">0.00</text>
+        <text x="90" y="232" font-size="11" fill="#888" text-anchor="end">-0.20</text>
+        <line x1="95" y1="52" x2="450" y2="52" stroke="#f0f0f0" stroke-width="1"/>
+        <line x1="95" y1="96" x2="450" y2="96" stroke="#f0f0f0" stroke-width="1"/>
+        <line x1="95" y1="140" x2="450" y2="140" stroke="#f0f0f0" stroke-width="1"/>
+        <line x1="95" y1="184" x2="450" y2="184" stroke="#333" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="95" y1="228" x2="450" y2="228" stroke="#f0f0f0" stroke-width="1"/>
+
+        <text x="15" y="140" font-size="13" fill="#333" text-anchor="middle" transform="rotate(-90,15,140)" font-weight="600">CV R&sup2;</text>
+
+        <!-- Grouped bars: each model gets 2 bars -->
+        <!-- OLS: BB=0.52, TR=0.17 -->
+        <rect x="110" y="70" width="28" height="114" fill="#0039A6" rx="2" opacity="0.9"/>
+        <text x="124" y="64" font-size="11" fill="#0039A6" text-anchor="middle" font-weight="700">0.52</text>
+        <rect x="142" y="147" width="28" height="37" fill="#EE352E" rx="2" opacity="0.85"/>
+        <text x="156" y="141" font-size="11" fill="#EE352E" text-anchor="middle" font-weight="700">0.17</text>
+
+        <!-- Ridge: BB=0.54, TR=0.18 -->
+        <rect x="190" y="65" width="28" height="119" fill="#0039A6" rx="2" opacity="0.9"/>
+        <text x="204" y="59" font-size="11" fill="#0039A6" text-anchor="middle" font-weight="700">0.54</text>
+        <rect x="222" y="144" width="28" height="40" fill="#EE352E" rx="2" opacity="0.85"/>
+        <text x="236" y="138" font-size="11" fill="#EE352E" text-anchor="middle" font-weight="700">0.18</text>
+
+        <!-- Lasso: BB=0.54, TR=-0.03 -->
+        <rect x="270" y="65" width="28" height="119" fill="#0039A6" rx="2" opacity="0.9"/>
+        <text x="284" y="59" font-size="11" fill="#0039A6" text-anchor="middle" font-weight="700">0.54</text>
+        <rect x="302" y="184" width="28" height="7" fill="#EE352E" rx="2" opacity="0.85"/>
+        <text x="316" y="200" font-size="11" fill="#EE352E" text-anchor="middle" font-weight="700">-0.03</text>
+
+        <!-- RF: BB=0.52, TR=0.05 -->
+        <rect x="350" y="70" width="28" height="114" fill="#0039A6" rx="2" opacity="0.9"/>
+        <text x="364" y="64" font-size="11" fill="#0039A6" text-anchor="middle" font-weight="700">0.52</text>
+        <rect x="382" y="173" width="28" height="11" fill="#EE352E" rx="2" opacity="0.85"/>
+        <text x="396" y="196" font-size="11" fill="#EE352E" text-anchor="middle" font-weight="700">0.05</text>
+
+        <!-- GBM: BB=0.35, TR=-0.26 -->
+        <rect x="420" y="107" width="28" height="77" fill="#0039A6" rx="2" opacity="0.9"/>
+        <text x="434" y="101" font-size="11" fill="#0039A6" text-anchor="middle" font-weight="700">0.35</text>
+        <rect x="452" y="184" width="28" height="57" fill="#EE352E" rx="2" opacity="0.85"/>
+        <text x="466" y="252" font-size="11" fill="#EE352E" text-anchor="middle" font-weight="700">-0.26</text>
+
+        <!-- X labels -->
+        <text x="138" y="262" font-size="12" fill="#333" text-anchor="middle" font-weight="600">OLS</text>
+        <text x="218" y="262" font-size="12" fill="#333" text-anchor="middle" font-weight="600">Ridge</text>
+        <text x="298" y="262" font-size="12" fill="#333" text-anchor="middle" font-weight="600">Lasso</text>
+        <text x="378" y="262" font-size="12" fill="#333" text-anchor="middle" font-weight="600">RF</text>
+        <text x="450" y="262" font-size="12" fill="#333" text-anchor="middle" font-weight="600">GBM</text>
+
+        <!-- Legend -->
+        <rect x="135" y="286" width="16" height="12" fill="#0039A6" rx="2"/>
+        <text x="157" y="297" font-size="12" fill="#333">Bounce-back</text>
+        <rect x="260" y="286" width="16" height="12" fill="#EE352E" rx="2"/>
+        <text x="282" y="297" font-size="12" fill="#333">True Recovery</text>
+
+        <!-- Key insight -->
+        <text x="240" y="328" font-size="12" fill="#666" text-anchor="middle" font-style="italic">The gap holds across all 5 models, including nonlinear ones</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ===== ROW 3: Results (wide) | Clusters ===== -->
+
+  <!-- 7. KEY RESULTS - WIDE -->
+  <div class="card span-2">
+    <div class="card-header">
+      <span class="line-bullet" style="background:var(--mta-orange)">7</span>
+      <h2>Key Results: Predictive Divergence</h2>
+    </div>
+    <div style="display:flex; gap:0.25in;">
+      <div style="flex:1;">
+        <p class="chart-title">Feature Drivers (Standardized &beta;)</p>
+        <!-- Horizontal bar chart as SVG -->
+        <svg viewBox="0 0 500 230" xmlns="http://www.w3.org/2000/svg" style="width:100%;">
+          <rect x="0" y="0" width="500" height="230" fill="white" rx="4"/>
+
+          <!-- Scale: zero at x=220, each 0.1 = 60px -->
+          <!-- -0.2 at x=100, +0.2 at x=340, +0.4 at x=460 -->
+          <line x1="220" y1="10" x2="220" y2="200" stroke="#333" stroke-width="1"/>
+          <text x="220" y="220" font-size="10" fill="#888" text-anchor="middle">0</text>
+          <text x="340" y="220" font-size="10" fill="#888" text-anchor="middle">+0.2</text>
+          <text x="460" y="220" font-size="10" fill="#888" text-anchor="middle">+0.4</text>
+          <text x="100" y="220" font-size="10" fill="#888" text-anchor="middle">-0.2</text>
+
+          <!-- Grid lines -->
+          <line x1="100" y1="10" x2="100" y2="200" stroke="#f0f0f0" stroke-width="1"/>
+          <line x1="340" y1="10" x2="340" y2="200" stroke="#f0f0f0" stroke-width="1"/>
+          <line x1="460" y1="10" x2="460" y2="200" stroke="#f0f0f0" stroke-width="1"/>
+
+          <!-- Pct Bachelors: BB +0.38 (228px), TR +0.05 (30px) -->
+          <text x="95" y="30" font-size="11" fill="#333" text-anchor="end">% Bachelors</text>
+          <rect x="220" y="18" width="228" height="10" fill="#0039A6" rx="2" opacity="0.85"/>
+          <rect x="220" y="30" width="30" height="10" fill="#EE352E" rx="2" opacity="0.75"/>
+
+          <!-- Pct Commercial: BB +0.34 (204px), TR +0.03 (18px) -->
+          <text x="95" y="62" font-size="11" fill="#333" text-anchor="end">% Commercial</text>
+          <rect x="220" y="50" width="204" height="10" fill="#0039A6" rx="2" opacity="0.85"/>
+          <rect x="220" y="62" width="18" height="10" fill="#EE352E" rx="2" opacity="0.75"/>
+
+          <!-- Remote Work Score: BB +0.24 (144px), TR n.s. -->
+          <text x="95" y="94" font-size="11" fill="#333" text-anchor="end">Remote Work</text>
+          <rect x="220" y="82" width="144" height="10" fill="#0039A6" rx="2" opacity="0.85"/>
+          <rect x="217" y="94" width="6" height="10" fill="#EE352E" rx="2" opacity="0.3"/>
+
+          <!-- Pct Asian: BB +0.13 (78px), TR +0.04 (24px) -->
+          <text x="95" y="126" font-size="11" fill="#333" text-anchor="end">% Asian</text>
+          <rect x="220" y="114" width="78" height="10" fill="#0039A6" rx="2" opacity="0.85"/>
+          <rect x="220" y="126" width="24" height="10" fill="#EE352E" rx="2" opacity="0.75"/>
+
+          <!-- Median Income: BB n.s., TR -0.04 (24px left) -->
+          <text x="95" y="158" font-size="11" fill="#333" text-anchor="end">Median Income</text>
+          <rect x="217" y="146" width="6" height="10" fill="#0039A6" rx="2" opacity="0.3"/>
+          <rect x="196" y="158" width="24" height="10" fill="#EE352E" rx="2" opacity="0.75"/>
+
+          <!-- Pct White: BB +0.11 (66px), TR +0.04 (24px) -->
+          <text x="95" y="190" font-size="11" fill="#333" text-anchor="end">% White</text>
+          <rect x="220" y="178" width="66" height="10" fill="#0039A6" rx="2" opacity="0.85"/>
+          <rect x="220" y="190" width="24" height="10" fill="#EE352E" rx="2" opacity="0.75"/>
+
+          <!-- Labels: B=blue, T=red -->
+          <text x="454" y="27" font-size="9.5" fill="#0039A6" font-weight="700">+0.38</text>
+          <text x="256" y="39" font-size="9.5" fill="#EE352E" font-weight="700">+0.05</text>
+          <text x="430" y="59" font-size="9.5" fill="#0039A6" font-weight="700">+0.34</text>
+          <text x="244" y="71" font-size="9.5" fill="#EE352E" font-weight="700">+0.03</text>
+          <text x="370" y="91" font-size="9.5" fill="#0039A6" font-weight="700">+0.24</text>
+          <text x="230" y="103" font-size="9.5" fill="#888">n.s.</text>
+          <text x="304" y="123" font-size="9.5" fill="#0039A6" font-weight="700">+0.13</text>
+          <text x="250" y="135" font-size="9.5" fill="#EE352E" font-weight="700">+0.04</text>
+          <text x="215" y="155" font-size="9.5" fill="#888" text-anchor="end">n.s.</text>
+          <text x="190" y="167" font-size="9.5" fill="#EE352E" font-weight="700" text-anchor="end">-0.04</text>
+          <text x="292" y="187" font-size="9.5" fill="#0039A6" font-weight="700">+0.11</text>
+          <text x="250" y="199" font-size="9.5" fill="#EE352E" font-weight="700">+0.04</text>
+        </svg>
+      </div>
+      <div style="flex:1;">
+        <p class="chart-title">Interpretation</p>
+        <div class="callout">
+          <p><strong>Bounce-back</strong> (CV R&sup2; = <span class="hl-green">0.54</span>): Education, commercial density, and remote work potential are the top predictors. These areas saw the biggest drops during COVID, so they had the most room to bounce back.</p>
+        </div>
+        <div class="callout" style="border-left-color:var(--mta-red);">
+          <p><strong>True Recovery</strong> (CV R&sup2; = <span class="hl-red">0.18</span>): Our neighborhood features explain very little of the variance. The signal is weak across all model types, suggesting that true recovery depends on factors we cannot measure in public data (e.g., employer RTO policies).</p>
+        </div>
+        <p style="margin-top:0.08in;"><strong>RF Feature Importance:</strong></p>
+        <ul>
+          <li><strong>Bounce-back:</strong> Education dominates (0.60), followed by income (0.15) and remote work (0.06)</li>
+          <li><strong>True recovery:</strong> Importance is spread across race/ethnicity variables (0.17&ndash;0.20 each) with no clear dominant feature</li>
+        </ul>
+        <p style="margin-top:0.08in;"><strong>Comparison to literature:</strong> Forouhar et al. (2025) reported 76% average downtown recovery across 66 North American cities. At the NTA level, we see a similar average but with wide variation (31%&ndash;98%), and the features that predict bounce-back do not carry over to true recovery.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. CLUSTERS -->
+  <div class="card">
+    <div class="card-header">
+      <span class="line-bullet" style="background:var(--mta-gray)">8</span>
+      <h2>Recovery Clusters</h2>
+    </div>
+    <table>
+      <tr><th>Cluster</th><th>n</th><th>Bounce</th><th>True</th></tr>
+      <tr><td style="color:var(--mta-green);font-weight:700">Near-Full</td><td>19</td><td>4.50x</td><td>83%</td></tr>
+      <tr><td style="color:var(--mta-blue);font-weight:700">Steady</td><td>27</td><td>3.17x</td><td>76%</td></tr>
+      <tr><td style="color:var(--mta-orange);font-weight:700">Lagging</td><td>54</td><td>2.25x</td><td>74%</td></tr>
+      <tr><td style="color:var(--mta-red);font-weight:700">Struggling</td><td>33</td><td>1.51x</td><td>61%</td></tr>
+    </table>
+    <p style="margin-top:0.08in;"><strong>Spatial Autocorrelation (Moran's I):</strong></p>
+    <table>
+      <tr><th>Metric</th><th>I</th><th>p</th></tr>
+      <tr><td>Bounce-back</td><td class="hl-green">0.68</td><td>0.001</td></tr>
+      <tr><td>True Recovery</td><td class="hl-red">0.18</td><td>0.006</td></tr>
+    </table>
+    <p style="margin-top:0.06in;">Bounce-back shows <strong>strong spatial clustering</strong> (commercial corridors in Manhattan). True recovery does <strong>not</strong> cluster geographically, pointing to non-spatial drivers like company-level RTO decisions.</p>
+    <div class="callout" style="margin-top:0.06in;">
+      <p><strong>Note:</strong> Essential-worker neighborhoods have the <em>lowest</em> bounce-back ratios because ridership there never dropped as far. If the MTA allocates resources based on growth metrics, these areas could be underserved despite consistent ridership.</p>
+    </div>
+  </div>
+
+  <!-- ===== ROW 4: Innovations | Conclusions (wide) ===== -->
+
+  <!-- 9. INNOVATIONS -->
+  <div class="card">
+    <div class="card-header">
+      <span class="line-bullet" style="background:var(--mta-purple)">9</span>
+      <h2>Innovations</h2>
+    </div>
+    <div class="innovation">
+      <span class="inno-num">1</span>
+      <p><strong>Dual Recovery Metrics:</strong> We define and compare two recovery baselines (COVID low vs. pre-COVID) at the NTA level.</p>
+    </div>
+    <div class="innovation">
+      <span class="inno-num">2</span>
+      <p><strong>Remote Work Scoring:</strong> We built a weighted scoring system that maps 20 NAICS industry codes to remote work potential, applied at the census block level.</p>
+    </div>
+    <div class="innovation">
+      <span class="inno-num">3</span>
+      <p><strong>Predictive Divergence:</strong> We show that bounce-back and true recovery have different predictors and different levels of predictability.</p>
+    </div>
+    <div class="innovation">
+      <span class="inno-num">4</span>
+      <p><strong>Dual-Map Dashboard:</strong> Side-by-side choropleths let users see how the same neighborhood looks different under each recovery definition.</p>
+    </div>
+    <p style="margin-top:0.06in;"><strong>Visualization:</strong> Built in Python with Plotly &amp; Folium. Includes side-by-side choropleths, a ridership timeline, a recovery paradox scatter plot, and neighborhood-level drill-down tooltips.</p>
+  </div>
+
+  <!-- 10. CONCLUSIONS (wide) -->
+  <div class="card span-2">
+    <div class="card-header">
+      <span class="line-bullet" style="background:var(--mta-red)">!</span>
+      <h2>Conclusions &amp; Policy Implications</h2>
+    </div>
+    <div style="display:flex; gap:0.3in;">
+      <div style="flex:1;">
+        <p><strong>Key Findings:</strong></p>
+        <ul>
+          <li>System-wide ridership sits at <strong>72% of pre-COVID</strong> levels; 98% of NTAs are still below their Jan 2020 baseline</li>
+          <li>Bounce-back and true recovery have <strong>different predictors</strong> and different levels of predictability</li>
+          <li>Neighborhood features explain <span class="hl-green">54%</span> of bounce-back variance but only <span class="hl-red">18%</span> of true recovery variance (CV R&sup2;)</li>
+          <li>The remaining 28% gap appears to be driven by hybrid/remote work norms that are not captured in public datasets</li>
+          <li>RF and GBM <strong>overfit</strong> on true recovery (negative CV R&sup2;), which rules out the possibility that we are simply undermodeling a complex signal</li>
+        </ul>
+      </div>
+      <div style="flex:1;">
+        <p><strong>Policy Implications:</strong></p>
+        <ul>
+          <li><strong>Separate the metrics</strong> &ndash; agencies should track growth from COVID lows and return to baseline independently</li>
+          <li><strong>Plan for uncertainty</strong> &ndash; true recovery cannot be predicted from neighborhood data alone, so service plans should consider multiple scenarios</li>
+          <li><strong>Watch for equity gaps</strong> &ndash; essential-worker neighborhoods have steady ridership but low bounce-back ratios, which could lead to underinvestment if agencies prioritize "growth"</li>
+          <li><strong>Revenue models</strong> &ndash; should account for a persistent ~28% ridership shortfall relative to 2020</li>
+        </ul>
+        <p style="margin-top:0.06in;"><strong>Limitations:</strong> Analysis covers subway-served NTAs only (133 of 262). Data ends Dec 2023. Employer RTO policies are not measured. Sample size is modest (n=133) for 10 predictors.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ==================== FOOTER ==================== -->
+<div class="footer">
+  <div class="refs">
+    <strong>References:</strong> [1] Liu et al., PLOS ONE 2020. [2] Ziedan et al., J. Public Transport. 2023. [3] Srinivasan et al., TRA 2025. [4] Osorio et al., TRD 2022. [5] Forouhar et al., Urban Studies 2025. [6] Mahfouz et al., Cities 2024. [7] Qi et al., IJTS&T 2021. [8] Xiao et al., TRD 2022. [9] Che et al., Cities 2023. [10] Sun et al., Front. Built Env. 2023.
+  </div>
+  <div class="branding">
+    <strong>CSE 6242 &middot; Team 002</strong><br>
+    Georgia Institute of Technology &middot; Spring 2026
+  </div>
+</div>
+
+</body>
+</html>
