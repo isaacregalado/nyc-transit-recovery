@@ -1,0 +1,37 @@
+# NYC Transit Recovery Project - Python Dependencies
+# Requires Python 3.8+
+
+# Data manipulation
+pandas>=2.0.0
+numpy>=1.24.0
+geopandas>=0.14.0
+shapely>=2.0.0  # Geometric operations
+pyarrow>=14.0.0  # Parquet file support
+
+# Data acquisition
+requests>=2.31.0
+sodapy>=2.2.0  # Socrata Open Data API client
+census>=0.8.0  # Census API wrapper
+
+# Analysis
+scikit-learn>=1.3.0
+scipy>=1.11.0
+statsmodels>=0.14.0
+pysal>=23.7  # Spatial analysis
+libpysal>=4.7.0  # Spatial weights
+esda>=2.5.0  # Spatial autocorrelation (Moran's I)
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+plotly>=5.18.0
+folium>=0.15.0  # Interactive maps
+branca>=0.6.0  # Folium colormaps
+
+# Jupyter
+jupyter>=1.0.0
+jupyterlab>=4.0.0
+
+# Utilities
+python-dotenv>=1.0.0
+tqdm>=4.66.0
