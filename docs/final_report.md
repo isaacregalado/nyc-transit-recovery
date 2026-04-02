@@ -68,9 +68,25 @@ NYC subway ridership grew **2.4x** from pandemic lows but remains at only **72%*
 
 **Observation 3: Lasso zeroes out true recovery.** Lasso retains features for bounce-back but zeroes them all for true recovery (R² = 0.00), confirming no feature subset has predictive value.
 
-**Key predictors (OLS standardized β):** Education (+0.38, p<0.001), commercial pct (+0.35, p<0.001), and remote work score (+0.23, p<0.001) predict bounce-back. Remote work score is not significant for true recovery, consistent with Osorio et al. [12]—neighborhoods with remote-capable jobs dropped more during COVID, creating room to "bounce back," but actual return depends on unmeasurable employer policies.
+**Significant Predictors (OLS standardized β):**
+
+| Predictor | Bounce-back | True Recovery |
+|---|---|---|
+| pct_bachelors | +0.38 (p<0.001) | +0.06 (p=0.02) |
+| pct_commercial | +0.35 (p<0.001) | +0.03 (p=0.01) |
+| remote_work_score | +0.23 (p<0.001) | n.s. |
+| commercial_density | -0.21 (p=0.002) | -0.03 (p=0.02) |
+| pct_asian | +0.19 (p=0.03) | +0.04 (p=0.03) |
+
+**Observation 4: Remote work predicts bounce-back but not true recovery.** remote_work_score is the third-strongest bounce-back predictor (+0.23, p<0.001) but is not significant for true recovery. This is consistent with Osorio et al.'s finding that remote work drove ridership loss [12]—neighborhoods with more remote-capable jobs dropped more during COVID, creating more room to "bounce back," but whether they actually return to pre-pandemic levels depends on employer-specific policies we cannot measure.
+
+**Observation 5: The commercial_density sign flip.** Higher commercial percentage predicts higher bounce-back (+0.35), but higher commercial *density* predicts lower bounce-back (-0.21). Interpretation: commercial neighborhoods bounce back, but the densest commercial cores (Midtown, FiDi) had the highest pre-COVID ridership and remain furthest from it in absolute terms.
+
+Note: VIF > 5 for pct_bachelors (7.2), pct_white (9.1), pct_black (10.4) indicates multicollinearity among demographic features. Overall model fit and CV R² remain valid but individual coefficients for correlated features may be unstable.
 
 ### 5.3 Clustering and Spatial Results
+
+K-means identified four trajectory clusters:
 
 | Cluster | NTAs | Bounce-back | True Recovery |
 |---|---|---|---|
@@ -79,35 +95,41 @@ NYC subway ridership grew **2.4x** from pandemic lows but remains at only **72%*
 | Lagging | 54 | 2.25x | 74% |
 | Struggling | 33 | 1.51x | 61% |
 
-**Observation 4:** "Struggling" NTAs (essential-worker neighborhoods, Bronx/outer Queens) show the lowest bounce-back because ridership never dropped as far—a smaller denominator, not poor recovery. If the MTA allocates resources based on growth metrics, these areas could be underserved.
+**Observation 6: The "Struggling" paradox.** The 33 "Struggling" NTAs show the *lowest* bounce-back (1.51x) but this is because they are predominantly essential-worker neighborhoods (Bronx, outer Queens) where ridership never dropped as sharply. Their low bounce-back reflects a smaller denominator, not poor recovery. If the MTA allocates resources based on growth metrics, these areas could be underserved despite consistent ridership.
 
-**Spatial autocorrelation:** Bounce-back clusters strongly (Moran's I = 0.68, p = 0.001); true recovery does not (I = 0.18, p = 0.008), pointing to non-spatial drivers like employer RTO policies.
+**Observation 7: Case studies.** East Midtown-Turtle Bay shows the highest bounce-back (4.53x)—its ridership exploded from COVID lows as office workers returned—yet its true recovery is only ~76%, meaning nearly a quarter of pre-pandemic commuters have not returned. Conversely, Canarsie (Brooklyn) shows a bounce-back *below 1.0* (0.70x), meaning it has *fewer* riders in Q4 2023 than during the Q3 2020 COVID trough—a neighborhood still declining.
 
-**Borough patterns:** Manhattan shows the largest gap (3.1x bounce-back, 76% true recovery). Outer boroughs show smaller bounce-back (1.8–2.4x) but comparable true recovery (68–74%).
+**Spatial autocorrelation:** Bounce-back shows strong spatial clustering (Moran's I = 0.68, p = 0.001) while true recovery shows weak clustering (I = 0.18, p = 0.008). This aligns with regression findings: bounce-back is predictable from spatially clustered features (commercial areas concentrate in Manhattan), while true recovery is more spatially random.
+
+**Observation 8: Borough-level patterns.** Manhattan shows the largest gap between metrics (3.1x bounce-back but only 76% true recovery), embodying the "illusion." Outer boroughs with more essential workers show smaller bounce-back (1.8–2.4x) but comparable true recovery (68–74%), suggesting a more modest but similarly permanent ridership loss.
 
 ### 5.4 Robustness and Validation
 
-**Temporal robustness.** We recomputed metrics using alternative windows. True recovery CV R² stays below 0.15 across all denominator choices (Jan 2020, Jan-Feb 2020) and numerator choices (Q3/Q4 2023). Bounce-back CV R² ranges from 0.52–0.66 across denominator choices (Q3 2020, Jul 2020, Q4 2020). NTA rankings are stable (Spearman ρ ≥ 0.85). The predictability gap is not an artifact of baseline selection.
+We conducted four robustness experiments to validate our core findings.
 
-**Cluster stability.** K=4 achieves the highest Calinski-Harabasz score (306.6) among K=2–8. Bootstrap resampling (1,000 iterations): mean ARI = 0.87, with 90.5% of iterations producing ARI > 0.7. Clusters are stable.
+**Temporal robustness.** We recomputed each metric using alternative denominator windows—True Recovery: Jan 2020 only, Jan-Feb 2020; Bounce-back: Q3 2020, Jul 2020, Q4 2020—crossed with two numerator windows (Q3/Q4 2023). True recovery CV R² stays below 0.15 across all windows. Bounce-back CV R² ranges from 0.52–0.66. NTA rankings are highly stable (Spearman ρ ≥ 0.85 for all variants). The predictability gap is not an artifact of baseline selection.
 
-**Model diagnostics.** OLS vs. RF permutation importance rankings correlate strongly for bounce-back (ρ=0.81, p=0.005) but not for true recovery (ρ=0.49, p=0.15). Removing high-VIF features (pct_bachelors, pct_white, pct_black) has negligible effect on bounce-back CV R² (0.535→0.536) but reduces true recovery from 0.179 to 0.101, suggesting its modest signal is partly driven by demographic correlations.
+**Cluster stability.** We evaluated K=2 through K=8. K=4 achieves the highest Calinski-Harabasz score (306.6) and near-peak silhouette (0.46). Bootstrap resampling (1,000 iterations): mean ARI = 0.87, median ARI = 0.89, with 90.5% of iterations producing ARI > 0.7. Cluster assignments are stable.
 
-**Feature group ablation.** We ran Ridge regression with Land Use, Employment, and Demographics individually and combined. For bounce-back, all groups contribute (Land Use: 0.28, Employment: 0.25, Demographics: 0.33, All: 0.54). For true recovery, only Demographics has positive CV R² (0.16); Land Use and Employment are near-zero or negative. The two metrics are structurally different.
+**Model diagnostics.** Bounce-back residuals are normally distributed (Shapiro-Wilk p=0.23) but heteroscedastic (Breusch-Pagan p=0.003). True recovery residuals are non-normal (p<0.001), confirming unmeasured variables dominate. OLS vs. RF permutation importance rankings correlate strongly for bounce-back (ρ=0.81, p=0.005) but not for true recovery (ρ=0.49, p=0.15), confirming that linear findings are not model-dependent. Removing high-VIF features has negligible effect on bounce-back CV R² (0.535→0.536) but reduces true recovery from 0.179 to 0.101, suggesting its modest signal is partly driven by demographic correlations rather than robust predictive structure.
+
+**Feature group ablation.** We partitioned features into Land Use, Employment, and Demographics and ran Ridge regression with each group individually, in pairs, and combined. For bounce-back, all three groups contribute meaningful signal (Land Use: 0.28, Employment: 0.25, Demographics: 0.33, All: 0.54). For true recovery, only Demographics has positive CV R² (0.16); Land Use and Employment alone are near-zero or negative. This confirms the two metrics are driven by structurally different processes.
 
 ### 5.5 Visualization Evaluation
 
-The dual-map view reveals patterns invisible in tabular data: Manhattan appears "best recovered" on the bounce-back map but "average" on the true recovery map. The scatter plot's negative correlation pattern validates the dual-metric framing. The scroll-snap narrative makes findings accessible to non-technical stakeholders.
+Our dashboard was evaluated against the design goal of preventing single-metric misinterpretation. The dual-map view reveals patterns invisible in tabular data: Manhattan appears as the "best recovered" borough on the bounce-back map but "average" on the true recovery map. The scatter plot's negative correlation pattern—neighborhoods with the highest bounce-back often have the lowest true recovery—is immediately visible but counterintuitive, which validates the need for the dual-metric framing. The scroll-snap narrative guides users from system-level context through the analytical evidence, making the findings accessible to non-technical stakeholders (transit planners, policymakers).
 
 ## 6. Conclusions and Discussion
 
-We analyzed NYC subway ridership recovery across 133 neighborhoods, revealing that the "recovery" narrative is an illusion. While ridership grew 2.4x from COVID lows, the system remains at 72% of pre-pandemic levels. Our key contribution is demonstrating that bounce-back and true recovery are fundamentally different phenomena: neighborhood characteristics explain 54% of bounce-back variance but only 18% of true recovery. Robustness checks confirm this gap holds across all baseline windows, model types, and feature subsets.
+We analyzed NYC subway ridership recovery across 133 neighborhoods, revealing that the "recovery" narrative is an illusion. While ridership grew 2.4x from COVID lows, the system remains at only 72% of pre-pandemic levels, with 98% of neighborhoods still below baseline. Our key contribution is demonstrating that bounce-back and true recovery are fundamentally different phenomena: neighborhood characteristics explain 54% of bounce-back variance but only 18% of true recovery. Robustness checks confirm this gap holds across all baseline windows, model types, and feature subsets.
 
-**Implications:** (1) Transit agencies should track both metrics separately. (2) True recovery cannot be predicted from neighborhood data, complicating service planning. (3) Essential-worker neighborhoods risk underinvestment if agencies prioritize growth metrics. (4) The 28% ridership gap may be permanent.
+The predictable bounce-back reflects workers returning to offices in commercial areas—those who could work remotely during COVID. True recovery depends on factors we cannot measure: employer return-to-office policies, worker preferences, and lasting behavioral changes. The negative CV R² for ensemble models on true recovery is not a failure but a finding—neighborhood characteristics simply do not determine which areas return to pre-pandemic ridership.
 
-**Limitations:** 133 subway-served NTAs only; data ends Dec 2023; employer RTO policies unmeasured; multicollinearity (VIF up to 10.4); modest sample size (n=133, p=10).
+**Implications:** (1) Transit agencies should track both metrics separately—conflating them leads to misallocated resources. (2) True recovery cannot be predicted from observable neighborhood characteristics, complicating long-term service planning. (3) Essential-worker neighborhoods risk underinvestment if agencies prioritize growth metrics. (4) The 28% ridership gap may be permanent, requiring adjustment to service levels and revenue projections.
 
-**Future Work:** Incorporate employer-level RTO data; extend to bus ridership; track whether the gap narrows over time.
+**Limitations:** Geographic scope limited to 133 subway-served NTAs (bus-dependent neighborhoods may differ); data ends December 2023; employer-level policies unavailable; multicollinearity among demographic variables (VIF up to 10.4); modest sample size (n=133, p=10) contributes to high CV variance; pre-COVID baseline limited to January-February 2020.
+
+**Future Work:** Incorporate employer-level return-to-office policy data; extend to bus ridership for comparison; track whether the recovery gap narrows or stabilizes over time.
 
 **Effort distribution:** All team members have contributed a similar amount of effort. Isaac and Elias led data acquisition and processing; Dami led statistical analysis; David led visualization development. All members contributed to methodology design and interpretation of results.
 
