@@ -28,6 +28,10 @@ This project analyzes NYC subway ridership recovery patterns post-COVID and iden
 
 **January 2020 - December 2023** (Pre-COVID baseline through recovery)
 
+## Live Demo
+
+**[Interactive Dashboard & Poster](https://isaacregalado.github.io/nyc-transit-recovery/)**
+
 ## Project Structure
 
 ```
@@ -38,10 +42,9 @@ nyc-transit-recovery/
 │   └── external/            # Reference data (NTA boundaries, etc.)
 ├── src/
 │   ├── data/                # Data download and processing scripts
-│   ├── analysis/            # Analysis and modeling scripts
-│   └── visualization/       # Visualization code
-├── docs/                    # Documentation and deliverables
-├── notebooks/               # Jupyter notebooks for exploration
+│   ├── analysis/            # Analysis, modeling, and robustness experiments
+│   └── visualization/       # Dashboard generation code
+├── docs/                    # Final report, dashboard, and poster (GitHub Pages)
 └── output/
     ├── figures/             # Generated visualizations
     └── tables/              # Generated tables and results
@@ -61,41 +64,30 @@ nyc-transit-recovery/
 
 1. **Data Integration**: Join all datasets to 262 Neighborhood Tabulation Areas (NTAs)
 2. **Dual Recovery Metrics**:
-   - Recovery Index: Q4 2023 / Q3 2020 (bounce-back from low)
-   - True Recovery: Q4 2023 / Jan-Feb 2020 (vs. pre-COVID baseline)
+   - Bounce-back: Q4 2023 / Q3 2020 (growth from COVID low)
+   - True Recovery: Q4 2023 / Jan-Feb 2020 (return to pre-COVID baseline)
 3. **Remote Work Scoring**: Classify 4.2M jobs by industry remote work potential
-4. **Regression Analysis**: OLS with VIF checks, 5-fold cross-validation
-5. **Clustering**: K-means (k=4) identifying distinct recovery trajectories
+4. **Multi-Model Regression**: OLS, Ridge, Lasso, Random Forest, Gradient Boosting with 5-fold CV
+5. **Clustering**: K-means (K=4) identifying distinct recovery trajectories
 6. **Spatial Analysis**: Moran's I confirming spatial autocorrelation patterns
-7. **Visualization**: Interactive dashboard with scroll-snap storytelling
+7. **Robustness**: Temporal sensitivity, cluster stability, model diagnostics, feature ablation
+8. **Visualization**: Interactive dashboard with scroll-snap storytelling
 
 ## Setup
 
-### Requirements
-
 ```bash
 pip install -r requirements.txt
-```
-
-### Download Data
-
-```bash
-python src/data/download_all.py
+python run_pipeline.py
 ```
 
 ## Deliverables
 
-| Deliverable             | Location                              |
-| ----------------------- | ------------------------------------- |
-| Proposal Document       | `docs/proposal.md`                    |
-| Final Report            | `docs/final_report.md`                |
-| Technical Documentation | `docs/technical_documentation.md`     |
-| Code Package            | `src/`                                |
-| Interactive Dashboard   | `output/figures/dashboard_apple.html` |
-
-## References
-
-See `docs/references.bib` for full bibliography of 14 peer-reviewed papers.
+| Deliverable           | Location                 |
+| --------------------- | ------------------------ |
+| Final Report          | `docs/final_report.md`   |
+| Interactive Dashboard | `docs/dashboard.html`    |
+| Poster                | `docs/poster.html`       |
+| Analysis Code         | `src/`                   |
 
 ## License
 
