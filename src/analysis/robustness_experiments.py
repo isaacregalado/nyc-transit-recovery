@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Section 5 Experiments — Robustness and Validation
+Section 5 Experiments: Robustness and Validation
 Implements experiments 5.1–5.4 from the progress report.
 
 Usage:
@@ -492,7 +492,7 @@ def experiment_5_4(df, features):
 
 def main():
     print("=" * 70)
-    print("SECTION 5 EXPERIMENTS — ROBUSTNESS AND VALIDATION")
+    print("SECTION 5 EXPERIMENTS: ROBUSTNESS AND VALIDATION")
     print("=" * 70)
 
     gdf, ridership = load_data()

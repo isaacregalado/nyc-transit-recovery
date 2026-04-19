@@ -353,7 +353,7 @@ def run_regression(X: pd.DataFrame, y: pd.Series) -> dict:
     print("MODEL VALIDATION")
     print("-"*40)
 
-    # Split unscaled data — pipelines handle their own scaling
+    # Split unscaled data; pipelines handle their own scaling
     X_train_raw, X_test_raw, y_train, y_test = train_test_split(
         X_clean, y_clean, test_size=0.2, random_state=42
     )
@@ -420,7 +420,7 @@ def run_regression(X: pd.DataFrame, y: pd.Series) -> dict:
         # Cross-validation (scaling happens inside each fold - no leakage)
         cv_scores = cross_val_score(pipeline, X_clean, y_clean, cv=kfold, scoring='r2')
 
-        # Train/test split for additional validation (unscaled — pipeline scales internally)
+        # Train/test split for additional validation (unscaled; pipeline scales internally)
         pipeline.fit(X_train_raw, y_train)
         train_r2_model = r2_score(y_train, pipeline.predict(X_train_raw))
         test_r2_model = r2_score(y_test, pipeline.predict(X_test_raw))

@@ -1460,7 +1460,7 @@ def create_dashboard():
                     <div style="font-size: 72px; font-weight: 900; background: linear-gradient(180deg, #e63946 0%, #c1121f 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -0.04em; line-height: 1;">{avg_true_recovery:.0%}</div>
                     <div style="font-size: 18px; font-weight: 600; color: white; margin: 12px 0 10px;">True Recovery Rate</div>
                     <p style="color: rgba(255,255,255,0.6); font-size: 13px; line-height: 1.5; margin: 0;">
-                        Only {avg_true_recovery:.0%} of pre-pandemic ridership — despite <span style="color: #2a9d8f;">2.4x bounce-back</span> from COVID lows
+                        Only {avg_true_recovery:.0%} of pre-pandemic ridership, despite <span style="color: #2a9d8f;">2.4x bounce-back</span> from COVID lows
                     </p>
                 </div>
 

@@ -36,7 +36,7 @@ We integrated five public datasets (Jan 2020–Dec 2023): MTA Subway Hourly Ride
 
 **Dual Recovery Metrics.** Bounce-back (Q4 2023 / Q3 2020) and true recovery (Q4 2023 / Jan-Feb 2020) per NTA. The same data yields fundamentally different conclusions depending on the denominator.
 
-**Multi-Model Regression.** Five models—OLS, Ridge, Lasso, Random Forest, Gradient Boosting—using sklearn Pipelines with StandardScaler inside each CV fold to prevent data leakage. Validation: VIF checks, 80/20 train-test split, 5-fold cross-validation. Ten features: pct_commercial, commercial_density, residential_density, remote_work_score, pct_bachelors, median_income, pct_white, pct_black, pct_asian, pct_hispanic.
+**Multi-Model Regression.** Five models (OLS, Ridge, Lasso, Random Forest, Gradient Boosting) using sklearn Pipelines with StandardScaler inside each CV fold to prevent data leakage. Validation: VIF checks, 80/20 train-test split, 5-fold cross-validation. Ten features: pct_commercial, commercial_density, residential_density, remote_work_score, pct_bachelors, median_income, pct_white, pct_black, pct_asian, pct_hispanic.
 
 **Trajectory Clustering.** K-means (K=4) on 42-month normalized trajectories (Jul 2020–Dec 2023), validated with silhouette score (0.46) and Calinski-Harabasz index (306.6, highest among K=2–8).
 
@@ -44,7 +44,7 @@ We integrated five public datasets (Jan 2020–Dec 2023): MTA Subway Hourly Ride
 
 ### 4.3 Interactive Visualization
 
-We built a scroll-snap dashboard (self-contained 15MB HTML) using Plotly and Folium, designed around **comparative revelation**—forcing users to confront both baselines simultaneously. Key design features: (1) **Dual-baseline choropleth maps** showing the same neighborhoods under both metrics side-by-side, going beyond single-metric dashboards [14]; (2) **Scroll-snap guided storytelling** adapting Chen et al.'s exploration approach [15] to a narrative structure; (3) **Recovery paradox scatter plot** revealing the counterintuitive negative correlation between bounce-back and true recovery; (4) **Coordinated hover tooltips** displaying both metrics simultaneously across all views; (5) **Model comparison visualization** contrasting CV R² across five models for both targets.
+We built a scroll-snap dashboard (self-contained 15MB HTML) using Plotly and Folium, designed around **comparative revelation**: forcing users to confront both baselines simultaneously. Key design features: (1) **Dual-baseline choropleth maps** showing the same neighborhoods under both metrics side-by-side, going beyond single-metric dashboards [14]; (2) **Scroll-snap guided storytelling** adapting Chen et al.'s exploration approach [15] to a narrative structure; (3) **Recovery paradox scatter plot** revealing the counterintuitive negative correlation between bounce-back and true recovery; (4) **Coordinated hover tooltips** displaying both metrics simultaneously across all views; (5) **Model comparison visualization** contrasting CV R² across five models for both targets.
 
 ## 5. Evaluation
 
@@ -64,11 +64,11 @@ NYC subway ridership grew **2.4x** from pandemic lows but remains at only **72%*
 
 **Observation 1: The predictability gap is the finding.** Bounce-back is moderately predictable (CV R² = 0.54); true recovery is not (CV R² = 0.18). This reveals the two metrics are driven by fundamentally different factors.
 
-**Observation 2: Ensemble methods confirm the distinction.** GBM achieves Train R² = 0.98 but CV R² = -0.26 on true recovery—pure overfitting. True recovery lacks predictable structure from neighborhood features.
+**Observation 2: Ensemble methods confirm the distinction.** GBM achieves Train R² = 0.98 but CV R² = -0.26 on true recovery, pure overfitting. True recovery lacks predictable structure from neighborhood features.
 
 **Observation 3: Lasso zeroes out true recovery.** Lasso retains features for bounce-back but zeroes them all for true recovery (R² = 0.00), confirming no feature subset has predictive value.
 
-**Key predictors (OLS standardized β):** Education (+0.38, p<0.001), commercial pct (+0.35, p<0.001), and remote work score (+0.23, p<0.001) predict bounce-back. Remote work score is not significant for true recovery, consistent with Osorio et al. [12]—neighborhoods with remote-capable jobs dropped more during COVID, creating room to "bounce back," but actual return depends on unmeasurable employer policies.
+**Key predictors (OLS standardized β):** Education (+0.38, p<0.001), commercial pct (+0.35, p<0.001), and remote work score (+0.23, p<0.001) predict bounce-back. Remote work score is not significant for true recovery, consistent with Osorio et al. [12]: neighborhoods with remote-capable jobs dropped more during COVID, creating room to "bounce back," but actual return depends on unmeasurable employer policies.
 
 ### 5.3 Clustering and Spatial Results
 
@@ -79,7 +79,7 @@ NYC subway ridership grew **2.4x** from pandemic lows but remains at only **72%*
 | Lagging | 54 | 2.25x | 74% |
 | Struggling | 33 | 1.51x | 61% |
 
-**Observation 4:** "Struggling" NTAs (essential-worker neighborhoods, Bronx/outer Queens) show the lowest bounce-back because ridership never dropped as far—a smaller denominator, not poor recovery. If the MTA allocates resources based on growth metrics, these areas could be underserved.
+**Observation 4:** "Struggling" NTAs (essential-worker neighborhoods, Bronx/outer Queens) show the lowest bounce-back because ridership never dropped as far: a smaller denominator, not poor recovery. If the MTA allocates resources based on growth metrics, these areas could be underserved.
 
 **Spatial autocorrelation:** Bounce-back clusters strongly (Moran's I = 0.68, p = 0.001); true recovery does not (I = 0.18, p = 0.008), pointing to non-spatial drivers like employer RTO policies.
 
