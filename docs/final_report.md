@@ -87,7 +87,7 @@ NYC subway ridership grew **2.4x** from pandemic lows but remains at only **72%*
 
 ### 5.4 Robustness and Validation
 
-**Temporal robustness.** We recomputed metrics using alternative windows. True recovery CV R² stays below 0.15 across all denominator choices (Jan 2020, Jan-Feb 2020) and numerator choices (Q3/Q4 2023). Bounce-back CV R² ranges from 0.52–0.66 across denominator choices (Q3 2020, Jul 2020, Q4 2020). NTA rankings are stable (Spearman ρ ≥ 0.85). The predictability gap is not an artifact of baseline selection.
+**Temporal robustness.** We recomputed metrics using alternative windows. True recovery CV R² stays below 0.15 across all denominator choices (Jan 2020, Jan-Feb 2020) and numerator choices (Q3/Q4 2023). Bounce-back CV R² ranges from 0.52–0.66 across denominator choices (Q3 2020, Jul 2020, Q4 2020). NTA rankings are stable (Spearman ρ ≥ 0.84; ≥ 0.97 for all Q4 2023 windows). The predictability gap is not an artifact of baseline selection.
 
 **Cluster stability.** K=4 achieves the highest Calinski-Harabasz score (306.6) among K=2–8. Bootstrap resampling (1,000 iterations): mean ARI = 0.87, with 90.5% of iterations producing ARI > 0.7. Clusters are stable.
 
@@ -97,7 +97,7 @@ NYC subway ridership grew **2.4x** from pandemic lows but remains at only **72%*
 
 ### 5.5 Visualization Evaluation
 
-The dual-map view reveals patterns invisible in tabular data: Manhattan appears "best recovered" on the bounce-back map but "average" on the true recovery map. The scatter plot's negative correlation pattern validates the dual-metric framing. The scroll-snap narrative makes findings accessible to non-technical stakeholders.
+The dual-map view reveals patterns invisible in tabular data: Manhattan appears "best recovered" on the bounce-back map but still well short of baseline on the true recovery map. The scatter plot's negative correlation pattern validates the dual-metric framing. The scroll-snap narrative makes findings accessible to non-technical stakeholders.
 
 ## 6. Conclusions and Discussion
 
