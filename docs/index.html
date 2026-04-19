@@ -94,12 +94,23 @@
     position: relative;
     z-index: 1;
     min-height: 100vh;
-    max-width: 1080px;
+    max-width: 1160px;
     margin: 0 auto;
-    padding: 104px 40px 56px;
+    padding: 56px 40px 40px;
     display: flex;
     flex-direction: column;
   }
+
+  /* Two-column hero: narrative + CTA rail */
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 380px;
+    gap: 72px;
+    align-items: start;
+    margin-bottom: 56px;
+  }
+
+  .hero-narrative { min-width: 0; }
 
   /* Eyebrow */
   .eyebrow {
@@ -108,7 +119,7 @@
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--text-muted);
-    margin-bottom: 28px;
+    margin-bottom: 24px;
   }
 
   .eyebrow .dot {
@@ -122,12 +133,12 @@
 
   /* Hero title */
   h1 {
-    font-size: clamp(48px, 8.5vw, 108px);
+    font-size: clamp(40px, 5.6vw, 76px);
     font-weight: 800;
     letter-spacing: -0.04em;
-    line-height: 0.92;
-    margin-bottom: 36px;
-    max-width: 900px;
+    line-height: 0.95;
+    margin-bottom: 24px;
+    max-width: 620px;
   }
 
   h1 .accent {
@@ -139,11 +150,11 @@
 
   /* Lede paragraph */
   .lede {
-    font-size: clamp(16px, 1.4vw, 19px);
+    font-size: clamp(15px, 1.2vw, 17px);
     line-height: 1.55;
     color: var(--text-dim);
     max-width: 620px;
-    margin-bottom: 56px;
+    margin-bottom: 0;
   }
 
   .lede strong {
@@ -157,7 +168,7 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 32px;
     max-width: 860px;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     padding-bottom: 28px;
   }
 
@@ -177,12 +188,12 @@
   .stat.alarm::before { background: var(--accent); }
 
   .stat-value {
-    font-size: clamp(42px, 6.2vw, 72px);
+    font-size: clamp(36px, 4.8vw, 56px);
     font-weight: 800;
     line-height: 1;
     letter-spacing: -0.045em;
     color: var(--text);
-    margin-bottom: 14px;
+    margin-bottom: 12px;
     font-variant-numeric: tabular-nums;
   }
 
@@ -211,7 +222,7 @@
 
   .punchline {
     max-width: 860px;
-    margin-bottom: 64px;
+    margin-bottom: 48px;
     padding: 16px 0 0;
     border-top: 1px solid var(--border);
     font-size: 14px;
@@ -220,32 +231,30 @@
     letter-spacing: 0.01em;
   }
 
-  /* Deliverables section */
-  .section-label {
-    font-size: 11px;
+  /* Deliverables rail (hero right column) */
+  .cards-label {
+    font-size: 10.5px;
     font-weight: 600;
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--text-muted);
-    margin-bottom: 20px;
+    margin-bottom: 14px;
   }
 
   .cards {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    max-width: 820px;
-    margin-bottom: 72px;
+    gap: 10px;
   }
 
   .card {
     position: relative;
     display: grid;
-    grid-template-columns: 56px 1fr auto;
-    gap: 24px;
+    grid-template-columns: 44px 1fr auto;
+    gap: 16px;
     align-items: center;
-    padding: 22px 26px;
-    border-radius: 16px;
+    padding: 18px 20px;
+    border-radius: 14px;
     border: 1px solid var(--border);
     background: linear-gradient(180deg, rgba(255,255,255,0.022), rgba(255,255,255,0.006));
     color: inherit;
@@ -278,15 +287,15 @@
   .card.report    { color: #8ab4ff; }
 
   .card-num {
-    width: 56px; height: 56px;
-    border-radius: 12px;
+    width: 44px; height: 44px;
+    border-radius: 10px;
     background: rgba(255,255,255,0.035);
     border: 1px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 15px;
+    font-size: 13px;
     color: var(--text-dim);
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.05em;
@@ -302,15 +311,15 @@
   .card-body { min-width: 0; }
 
   .card-title {
-    font-size: 17px;
+    font-size: 15.5px;
     font-weight: 600;
     color: var(--text);
-    margin-bottom: 5px;
+    margin-bottom: 4px;
     letter-spacing: -0.005em;
   }
 
   .card-meta {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--text-dim);
     line-height: 1.45;
   }
@@ -369,38 +378,37 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  .eyebrow, h1, .lede, .stat, .punchline, .section-label, .card, footer {
+  .eyebrow, h1, .lede, .stat, .punchline, .cards-label, .card, footer {
     animation: fadeInUp 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
   }
 
   .eyebrow { animation-delay: 0.00s; }
   h1       { animation-delay: 0.06s; }
-  .lede    { animation-delay: 0.16s; }
-  .stats .stat:nth-child(1) { animation-delay: 0.26s; }
-  .stats .stat:nth-child(2) { animation-delay: 0.30s; }
-  .stats .stat:nth-child(3) { animation-delay: 0.34s; }
-  .punchline { animation-delay: 0.42s; }
-  .section-label { animation-delay: 0.50s; }
-  .cards .card:nth-child(1) { animation-delay: 0.54s; }
-  .cards .card:nth-child(2) { animation-delay: 0.58s; }
-  .cards .card:nth-child(3) { animation-delay: 0.62s; }
-  footer { animation-delay: 0.72s; }
+  .lede    { animation-delay: 0.14s; }
+  .cards-label { animation-delay: 0.20s; }
+  .cards .card:nth-child(1) { animation-delay: 0.24s; }
+  .cards .card:nth-child(2) { animation-delay: 0.28s; }
+  .cards .card:nth-child(3) { animation-delay: 0.32s; }
+  .stats .stat:nth-child(1) { animation-delay: 0.40s; }
+  .stats .stat:nth-child(2) { animation-delay: 0.44s; }
+  .stats .stat:nth-child(3) { animation-delay: 0.48s; }
+  .punchline { animation-delay: 0.56s; }
+  footer { animation-delay: 0.66s; }
 
   /* Responsive */
+  @media (max-width: 980px) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
+  }
+
   @media (max-width: 780px) {
-    .wrapper { padding: 80px 24px 40px; }
+    .wrapper { padding: 48px 24px 40px; }
     .stats { gap: 20px; }
-    .stat-value { font-size: 38px; }
+    .stat-value { font-size: 36px; }
     .stat-label { font-size: 11.5px; }
     .stat-label .label-tag { font-size: 9.5px; }
-    .card {
-      grid-template-columns: 44px 1fr auto;
-      gap: 16px;
-      padding: 18px 20px;
-    }
-    .card-num { width: 44px; height: 44px; font-size: 13px; }
-    .card-title { font-size: 15px; }
-    .card-meta { font-size: 12px; }
     footer { flex-direction: column; align-items: flex-start; gap: 8px; }
   }
 
@@ -427,14 +435,49 @@
     CSE 6242 <span class="dot"></span> Data and Visual Analytics <span class="dot"></span> Spring 2026
   </div>
 
-  <h1>The <span class="accent">Recovery</span><br>is an Illusion.</h1>
+  <div class="hero-grid">
+    <div class="hero-narrative">
+      <h1>The <span class="accent">Recovery</span><br>is an Illusion.</h1>
+      <p class="lede">
+        An analysis of post-COVID NYC subway ridership across <strong>133 subway-served neighborhoods</strong>.
+        Ridership grew <strong>2.4&times;</strong> from its pandemic low, yet the system remains at only
+        <strong>72%</strong> of where it started. Both numbers are true &mdash; they just answer
+        different questions.
+      </p>
+    </div>
 
-  <p class="lede">
-    An analysis of post-COVID NYC subway ridership across <strong>133 subway-served neighborhoods</strong>.
-    Ridership grew <strong>2.4&times;</strong> from its pandemic low, yet the system remains at only
-    <strong>72%</strong> of where it started. Both numbers are true &mdash; they just answer
-    different questions.
-  </p>
+    <nav aria-label="Deliverables">
+      <div class="cards-label">Deliverables</div>
+      <div class="cards">
+        <a href="dashboard.html" class="card dashboard">
+          <div class="card-num">01</div>
+          <div class="card-body">
+            <div class="card-title">Interactive Dashboard</div>
+            <div class="card-meta">Dual-metric maps<span class="sep">·</span>rankings<span class="sep">·</span>paradox</div>
+          </div>
+          <div class="card-arrow" aria-hidden="true">&rarr;</div>
+        </a>
+
+        <a href="poster.html" class="card poster">
+          <div class="card-num">02</div>
+          <div class="card-body">
+            <div class="card-title">Research Poster</div>
+            <div class="card-meta">30&times;40&Prime;<span class="sep">·</span>methodology<span class="sep">·</span>results</div>
+          </div>
+          <div class="card-arrow" aria-hidden="true">&rarr;</div>
+        </a>
+
+        <a href="https://docs.google.com/document/d/1i9UwPuXbC8JMNvbfs2tLhdjd-swhayQi/preview" target="_blank" rel="noopener" class="card report">
+          <div class="card-num">03</div>
+          <div class="card-body">
+            <div class="card-title">Final Report <span class="external-badge">PDF</span></div>
+            <div class="card-meta">6 pages<span class="sep">·</span>evaluation<span class="sep">·</span>robustness</div>
+          </div>
+          <div class="card-arrow" aria-hidden="true">&rarr;</div>
+        </a>
+      </div>
+    </nav>
+  </div>
 
   <div class="stats">
     <div class="stat">
@@ -463,43 +506,6 @@
   <p class="punchline">
     &ldquo;Bouncing back&rdquo; and &ldquo;truly recovering&rdquo; are fundamentally different phenomena.
   </p>
-
-  <div class="section-label">Deliverables</div>
-
-  <nav class="cards">
-    <a href="dashboard.html" class="card dashboard">
-      <div class="card-num">01</div>
-      <div class="card-body">
-        <div class="card-title">Interactive Dashboard</div>
-        <div class="card-meta">
-          Dual-metric choropleths<span class="sep">·</span>133-NTA rankings<span class="sep">·</span>recovery paradox<span class="sep">·</span>cluster trajectories
-        </div>
-      </div>
-      <div class="card-arrow" aria-hidden="true">&rarr;</div>
-    </a>
-
-    <a href="poster.html" class="card poster">
-      <div class="card-num">02</div>
-      <div class="card-body">
-        <div class="card-title">Research Poster</div>
-        <div class="card-meta">
-          30&times;40&Prime; format<span class="sep">·</span>methodology<span class="sep">·</span>results<span class="sep">·</span>policy implications
-        </div>
-      </div>
-      <div class="card-arrow" aria-hidden="true">&rarr;</div>
-    </a>
-
-    <a href="https://docs.google.com/document/d/1i9UwPuXbC8JMNvbfs2tLhdjd-swhayQi/preview" target="_blank" rel="noopener" class="card report">
-      <div class="card-num">03</div>
-      <div class="card-body">
-        <div class="card-title">Final Report <span class="external-badge">PDF</span></div>
-        <div class="card-meta">
-          6 pages<span class="sep">·</span>evaluation<span class="sep">·</span>robustness experiments<span class="sep">·</span>conclusions
-        </div>
-      </div>
-      <div class="card-arrow" aria-hidden="true">&rarr;</div>
-    </a>
-  </nav>
 
   <footer>
     <div class="team">
