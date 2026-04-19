@@ -4,283 +4,539 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NYC Transit Recovery Analysis — Team 002</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
-    background: #0a0a0f;
-    color: white;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
+  :root {
+    --bg: #08090e;
+    --bg-surface: #11131b;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.16);
+    --text: #f3f4f6;
+    --text-dim: rgba(243,244,246,0.58);
+    --text-muted: rgba(243,244,246,0.35);
+    --accent: #e63946;
+    --accent-dim: #c1121f;
+    --mta-blue: #0039A6;
+    --mta-orange: #FF6319;
+    --mta-green: #00933C;
+    --mta-yellow: #FCCC0A;
+    --mta-purple: #B933AD;
   }
 
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+    font-feature-settings: 'ss01', 'cv02', 'cv03', 'cv04';
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* NYC subway line color rule — brand anchor */
+  .subway-rule {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    z-index: 100;
+    background: linear-gradient(90deg,
+      var(--mta-blue)   0%  16.6%,
+      var(--mta-orange) 16.6% 33.3%,
+      var(--mta-yellow) 33.3% 50%,
+      var(--mta-green)  50%  66.6%,
+      var(--mta-purple) 66.6% 83.3%,
+      var(--accent)     83.3% 100%);
+  }
+
+  /* Ambient gradient glow */
   body::before {
     content: '';
     position: fixed;
     top: -50%; left: -50%;
     width: 200%; height: 200%;
     background:
-      radial-gradient(circle at 30% 40%, rgba(230, 57, 70, 0.06) 0%, transparent 50%),
-      radial-gradient(circle at 70% 60%, rgba(42, 157, 143, 0.06) 0%, transparent 50%);
-    animation: drift 20s ease-in-out infinite;
+      radial-gradient(ellipse 55% 40% at 30% 28%, rgba(230,57,70,0.09) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 40% at 72% 72%, rgba(0,57,166,0.06) 0%, transparent 55%);
+    animation: drift 32s ease-in-out infinite;
+    pointer-events: none;
     z-index: 0;
   }
 
   @keyframes drift {
     0%, 100% { transform: translate(0, 0); }
-    50% { transform: translate(-3%, 3%); }
+    50%      { transform: translate(-2%, 2%); }
   }
 
-  .page { position: relative; z-index: 1; width: 100%; max-width: 480px; padding: 0 24px; }
+  /* Subtle grid */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+    background-size: 56px 56px;
+    pointer-events: none;
+    z-index: 0;
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  }
 
-  /* ===== LOGIN PAGE (disabled for submission) ===== */
-  #login-page { display: none; text-align: center; }
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 104px 40px 56px;
+    display: flex;
+    flex-direction: column;
+  }
 
+  /* Eyebrow */
   .eyebrow {
     font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.4);
+    color: var(--text-muted);
     margin-bottom: 28px;
   }
 
+  .eyebrow .dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin: 0 10px -1px;
+    box-shadow: 0 0 10px rgba(230,57,70,0.6);
+  }
+
+  /* Hero title */
   h1 {
-    font-size: 44px;
+    font-size: clamp(48px, 8.5vw, 108px);
     font-weight: 800;
-    letter-spacing: -1.5px;
-    line-height: 1.1;
-    margin-bottom: 16px;
+    letter-spacing: -0.04em;
+    line-height: 0.92;
+    margin-bottom: 36px;
+    max-width: 900px;
   }
 
-  h1 .highlight {
-    background: linear-gradient(135deg, #e63946, #c1121f);
+  h1 .accent {
+    background: linear-gradient(135deg, var(--accent), var(--accent-dim));
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
-  .description {
-    font-size: 15px;
-    color: rgba(255,255,255,0.45);
-    line-height: 1.6;
-    margin-bottom: 12px;
+  /* Lede paragraph */
+  .lede {
+    font-size: clamp(16px, 1.4vw, 19px);
+    line-height: 1.55;
+    color: var(--text-dim);
+    max-width: 620px;
+    margin-bottom: 56px;
   }
 
-  .team {
-    font-size: 13px;
-    color: rgba(255,255,255,0.3);
-    margin-bottom: 40px;
-  }
-
-  .password-group {
-    margin-bottom: 16px;
-  }
-
-  .password-group input {
-    width: 100%;
-    padding: 14px 18px;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.12);
-    background: rgba(255,255,255,0.05);
-    color: white;
-    font-size: 15px;
-    outline: none;
-    text-align: center;
-    letter-spacing: 0.08em;
-    transition: border-color 0.2s;
-  }
-
-  .password-group input:focus {
-    border-color: rgba(230, 57, 70, 0.5);
-  }
-
-  .password-group input::placeholder {
-    color: rgba(255,255,255,0.25);
-    letter-spacing: 0.05em;
-  }
-
-  .error {
-    color: #e63946;
-    font-size: 13px;
-    margin-bottom: 12px;
-    display: none;
-    height: 18px;
-  }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 36px;
-    border-radius: 12px;
-    font-size: 15px;
+  .lede strong {
+    color: var(--text);
     font-weight: 600;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    border: none;
-    width: 100%;
   }
 
-  .btn-primary {
-    background: linear-gradient(135deg, #e63946, #c1121f);
-    color: white;
+  /* Stats row */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    max-width: 860px;
+    margin-bottom: 20px;
+    padding-bottom: 28px;
   }
 
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(230, 57, 70, 0.3);
+  .stat {
+    position: relative;
+    padding-top: 16px;
   }
 
-  /* ===== MENU PAGE ===== */
-  #menu-page {
-    text-align: center;
+  .stat::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 28px; height: 2px;
+    background: var(--text-muted);
   }
 
-  .welcome {
+  .stat.alarm::before { background: var(--accent); }
+
+  .stat-value {
+    font-size: clamp(42px, 6.2vw, 72px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.045em;
+    color: var(--text);
+    margin-bottom: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat.alarm .stat-value {
+    background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .stat-label {
+    font-size: 12.5px;
+    color: var(--text-dim);
+    line-height: 1.45;
+    letter-spacing: 0.01em;
+  }
+
+  .stat-label .label-tag {
+    display: block;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .punchline {
+    max-width: 860px;
+    margin-bottom: 64px;
+    padding: 16px 0 0;
+    border-top: 1px solid var(--border);
     font-size: 14px;
-    color: rgba(255,255,255,0.4);
-    margin-bottom: 32px;
+    color: var(--text-muted);
+    font-style: italic;
+    letter-spacing: 0.01em;
   }
 
-  .menu-cards {
+  /* Deliverables section */
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+
+  .cards {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
+    max-width: 820px;
+    margin-bottom: 72px;
   }
 
-  .menu-card {
-    display: flex;
+  .card {
+    position: relative;
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 24px;
     align-items: center;
-    gap: 20px;
-    padding: 24px;
+    padding: 22px 26px;
     border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.08);
-    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(255,255,255,0.022), rgba(255,255,255,0.006));
+    color: inherit;
     text-decoration: none;
-    color: white;
-    transition: all 0.3s ease;
-    text-align: left;
+    transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+    overflow: hidden;
   }
 
-  .menu-card:hover {
-    background: rgba(255,255,255,0.07);
-    border-color: rgba(255,255,255,0.15);
-    transform: translateY(-2px);
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 3px;
+    background: currentColor;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.25s ease;
   }
 
-  .menu-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 14px;
+  .card:hover {
+    border-color: var(--border-strong);
+    background: linear-gradient(180deg, rgba(255,255,255,0.045), rgba(255,255,255,0.014));
+    transform: translateX(2px);
+  }
+
+  .card:hover::before { transform: scaleY(1); }
+
+  .card.dashboard { color: var(--accent); }
+  .card.poster    { color: var(--mta-green); }
+  .card.report    { color: #8ab4ff; }
+
+  .card-num {
+    width: 56px; height: 56px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.035);
+    border: 1px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
-    flex-shrink: 0;
-  }
-
-  .menu-icon.dashboard {
-    background: linear-gradient(135deg, rgba(230, 57, 70, 0.2), rgba(230, 57, 70, 0.05));
-    border: 1px solid rgba(230, 57, 70, 0.2);
-  }
-
-  .menu-icon.poster {
-    background: linear-gradient(135deg, rgba(42, 157, 143, 0.2), rgba(42, 157, 143, 0.05));
-    border: 1px solid rgba(42, 157, 143, 0.2);
-  }
-
-  .menu-icon.report {
-    background: linear-gradient(135deg, rgba(69, 123, 209, 0.2), rgba(69, 123, 209, 0.05));
-    border: 1px solid rgba(69, 123, 209, 0.2);
-  }
-
-  .menu-card h3 {
-    font-size: 17px;
     font-weight: 700;
-    margin-bottom: 4px;
+    font-size: 15px;
+    color: var(--text-dim);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
+    transition: all 0.25s ease;
   }
 
-  .menu-card p {
+  .card:hover .card-num {
+    background: color-mix(in srgb, currentColor 12%, transparent);
+    border-color: color-mix(in srgb, currentColor 35%, transparent);
+    color: currentColor;
+  }
+
+  .card-body { min-width: 0; }
+
+  .card-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 5px;
+    letter-spacing: -0.005em;
+  }
+
+  .card-meta {
     font-size: 13px;
-    color: rgba(255,255,255,0.4);
-    line-height: 1.4;
+    color: var(--text-dim);
+    line-height: 1.45;
   }
 
-  .menu-card .arrow {
-    margin-left: auto;
+  .card-meta .sep {
+    color: var(--text-muted);
+    margin: 0 8px;
+  }
+
+  .card-arrow {
     font-size: 20px;
-    color: rgba(255,255,255,0.2);
-    transition: all 0.2s;
+    color: var(--text-muted);
+    transition: color 0.25s, transform 0.25s;
   }
 
-  .menu-card:hover .arrow {
-    color: rgba(255,255,255,0.5);
+  .card:hover .card-arrow {
+    color: currentColor;
     transform: translateX(4px);
   }
 
-  .footer {
-    position: fixed;
-    bottom: 24px;
-    font-size: 12px;
-    color: rgba(255,255,255,0.18);
-    z-index: 1;
-    text-align: center;
+  .external-badge {
+    display: inline-block;
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin-left: 8px;
+    vertical-align: 1px;
+  }
+
+  /* Footer */
+  footer {
+    margin-top: auto;
+    padding-top: 36px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  footer .team { color: var(--text-dim); letter-spacing: 0.005em; }
+  footer .team strong { color: var(--text); font-weight: 500; }
+  footer .institution { white-space: nowrap; }
+
+  /* Fade-in cascade */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .eyebrow, h1, .lede, .stat, .punchline, .section-label, .card, footer {
+    animation: fadeInUp 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+  }
+
+  .eyebrow { animation-delay: 0.00s; }
+  h1       { animation-delay: 0.06s; }
+  .lede    { animation-delay: 0.16s; }
+  .stats .stat:nth-child(1) { animation-delay: 0.26s; }
+  .stats .stat:nth-child(2) { animation-delay: 0.30s; }
+  .stats .stat:nth-child(3) { animation-delay: 0.34s; }
+  .punchline { animation-delay: 0.42s; }
+  .section-label { animation-delay: 0.50s; }
+  .cards .card:nth-child(1) { animation-delay: 0.54s; }
+  .cards .card:nth-child(2) { animation-delay: 0.58s; }
+  .cards .card:nth-child(3) { animation-delay: 0.62s; }
+  footer { animation-delay: 0.72s; }
+
+  /* Responsive */
+  @media (max-width: 780px) {
+    .wrapper { padding: 80px 24px 40px; }
+    .stats { gap: 20px; }
+    .stat-value { font-size: 38px; }
+    .stat-label { font-size: 11.5px; }
+    .stat-label .label-tag { font-size: 9.5px; }
+    .card {
+      grid-template-columns: 44px 1fr auto;
+      gap: 16px;
+      padding: 18px 20px;
+    }
+    .card-num { width: 44px; height: 44px; font-size: 13px; }
+    .card-title { font-size: 15px; }
+    .card-meta { font-size: 12px; }
+    footer { flex-direction: column; align-items: flex-start; gap: 8px; }
+  }
+
+  @media (max-width: 520px) {
+    .stats { grid-template-columns: 1fr 1fr; }
+    .stats .stat:nth-child(3) { grid-column: 1 / -1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+    }
   }
 </style>
 </head>
 <body>
 
-<!-- ===== MENU PAGE ===== -->
-<div class="page" id="menu-page">
-  <div class="eyebrow">CSE 6242 &middot; Data and Visual Analytics &middot; Spring 2026</div>
-  <h1>The <span class="highlight">Recovery</span><br>is an Illusion</h1>
-  <p class="description">
-    An analysis of NYC subway ridership recovery across 133 neighborhoods, revealing that "bouncing back" and "truly recovering" are fundamentally different phenomena.
-  </p>
-  <p class="team">
-    Isaac Regalado &middot; Elias Dematis &middot; Dami Awosika &middot; David Mongeau<br>
-    Georgia Institute of Technology &middot; Team 002
-  </p>
+<div class="subway-rule" aria-hidden="true"></div>
 
-  <div class="menu-cards">
-    <a href="dashboard.html" class="menu-card">
-      <div class="menu-icon dashboard">&#9776;</div>
-      <div>
-        <h3>Interactive Dashboard</h3>
-        <p>Explore recovery patterns across NYC neighborhoods with dual-metric maps, charts, and rankings</p>
-      </div>
-      <span class="arrow">&rsaquo;</span>
-    </a>
+<main class="wrapper">
 
-    <a href="poster.html" class="menu-card">
-      <div class="menu-icon poster">&#9638;</div>
-      <div>
-        <h3>Project Poster</h3>
-        <p>30&times;40" research poster with methodology, results, and key findings</p>
-      </div>
-      <span class="arrow">&rsaquo;</span>
-    </a>
-
-    <a href="https://docs.google.com/document/d/1i9UwPuXbC8JMNvbfs2tLhdjd-swhayQi/preview" target="_blank" class="menu-card">
-      <div class="menu-icon report">&#9998;</div>
-      <div>
-        <h3>Final Report</h3>
-        <p>Full writeup with evaluation, robustness experiments, and conclusions</p>
-      </div>
-      <span class="arrow">&rsaquo;</span>
-    </a>
+  <div class="eyebrow">
+    CSE 6242 <span class="dot"></span> Data and Visual Analytics <span class="dot"></span> Spring 2026
   </div>
-</div>
 
-<div class="footer">
-  Georgia Institute of Technology &middot; CSE 6242 &middot; Spring 2026
-</div>
+  <h1>The <span class="accent">Recovery</span><br>is an Illusion.</h1>
+
+  <p class="lede">
+    An analysis of post-COVID NYC subway ridership across <strong>133 subway-served neighborhoods</strong>.
+    Ridership grew <strong>2.4&times;</strong> from its pandemic low, yet the system remains at only
+    <strong>72%</strong> of where it started. Both numbers are true &mdash; they just answer
+    different questions.
+  </p>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-value" data-count="2.4" data-suffix="×" data-decimals="1">2.4×</div>
+      <div class="stat-label">
+        growth from the pandemic low
+        <span class="label-tag">Bounce-back</span>
+      </div>
+    </div>
+    <div class="stat alarm">
+      <div class="stat-value" data-count="72" data-suffix="%">72%</div>
+      <div class="stat-label">
+        of pre-COVID ridership system-wide
+        <span class="label-tag">True recovery</span>
+      </div>
+    </div>
+    <div class="stat alarm">
+      <div class="stat-value" data-count="130">130</div>
+      <div class="stat-label">
+        of 133 NTAs remain below their January 2020 baseline
+        <span class="label-tag">98% of neighborhoods</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="punchline">
+    &ldquo;Bouncing back&rdquo; and &ldquo;truly recovering&rdquo; are fundamentally different phenomena.
+  </p>
+
+  <div class="section-label">Deliverables</div>
+
+  <nav class="cards">
+    <a href="dashboard.html" class="card dashboard">
+      <div class="card-num">01</div>
+      <div class="card-body">
+        <div class="card-title">Interactive Dashboard</div>
+        <div class="card-meta">
+          Dual-metric choropleths<span class="sep">·</span>133-NTA rankings<span class="sep">·</span>recovery paradox<span class="sep">·</span>cluster trajectories
+        </div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">&rarr;</div>
+    </a>
+
+    <a href="poster.html" class="card poster">
+      <div class="card-num">02</div>
+      <div class="card-body">
+        <div class="card-title">Research Poster</div>
+        <div class="card-meta">
+          30&times;40&Prime; format<span class="sep">·</span>methodology<span class="sep">·</span>results<span class="sep">·</span>policy implications
+        </div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">&rarr;</div>
+    </a>
+
+    <a href="https://docs.google.com/document/d/1i9UwPuXbC8JMNvbfs2tLhdjd-swhayQi/preview" target="_blank" rel="noopener" class="card report">
+      <div class="card-num">03</div>
+      <div class="card-body">
+        <div class="card-title">Final Report <span class="external-badge">PDF</span></div>
+        <div class="card-meta">
+          6 pages<span class="sep">·</span>evaluation<span class="sep">·</span>robustness experiments<span class="sep">·</span>conclusions
+        </div>
+      </div>
+      <div class="card-arrow" aria-hidden="true">&rarr;</div>
+    </a>
+  </nav>
+
+  <footer>
+    <div class="team">
+      <strong>Isaac Regalado</strong> &middot; <strong>Elias Dematis</strong> &middot; <strong>Dami Awosika</strong> &middot; <strong>David Mongeau</strong>
+    </div>
+    <div class="institution">Georgia Institute of Technology &middot; Team 002</div>
+  </footer>
+
+</main>
+
+<script>
+  (function () {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+
+    const els = document.querySelectorAll('[data-count]');
+    els.forEach((el, idx) => {
+      const target = parseFloat(el.dataset.count);
+      const suffix = el.dataset.suffix || '';
+      const decimals = parseInt(el.dataset.decimals || '0', 10);
+      const duration = 1100;
+      const delay = 260 + idx * 40;
+
+      setTimeout(() => {
+        const start = performance.now();
+        function step(now) {
+          const t = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - t, 3);
+          const val = target * eased;
+          el.textContent = val.toFixed(decimals) + suffix;
+          if (t < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }, delay);
+    });
+  })();
+</script>
 
 </body>
 </html>
