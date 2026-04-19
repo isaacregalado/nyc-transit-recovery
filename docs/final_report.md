@@ -50,7 +50,7 @@ We built a scroll-snap dashboard (self-contained 15MB HTML) using Plotly and Fol
 
 ### 5.1 The Recovery Illusion
 
-NYC subway ridership grew **2.4x** from pandemic lows but remains at only **72%** of pre-COVID levels. **98%** of neighborhoods (130 of 133) have not returned to baseline. True recovery ranges from 31% to 98% across NTAs.
+NYC subway ridership grew **2.4x** from pandemic lows but remains at only **72%** of pre-COVID levels. **98%** of neighborhoods (130 of 133) have not returned to baseline. True recovery ranges from 20% (Canarsie, Brooklyn) to 107% (Corona, Queens) across NTAs.
 
 ### 5.2 Regression Results
 

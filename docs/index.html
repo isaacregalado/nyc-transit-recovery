@@ -37,8 +37,8 @@
 
   .page { position: relative; z-index: 1; width: 100%; max-width: 480px; padding: 0 24px; }
 
-  /* ===== LOGIN PAGE ===== */
-  #login-page { text-align: center; }
+  /* ===== LOGIN PAGE (disabled for submission) ===== */
+  #login-page { display: none; text-align: center; }
 
   .eyebrow {
     font-size: 11px;
@@ -139,7 +139,6 @@
 
   /* ===== MENU PAGE ===== */
   #menu-page {
-    display: none;
     text-align: center;
   }
 
@@ -237,8 +236,8 @@
 </head>
 <body>
 
-<!-- ===== LOGIN PAGE ===== -->
-<div class="page" id="login-page">
+<!-- ===== MENU PAGE ===== -->
+<div class="page" id="menu-page">
   <div class="eyebrow">CSE 6242 &middot; Data and Visual Analytics &middot; Spring 2026</div>
   <h1>The <span class="highlight">Recovery</span><br>is an Illusion</h1>
   <p class="description">
@@ -248,20 +247,6 @@
     Isaac Regalado &middot; Elias Dematis &middot; Dami Awosika &middot; David Mongeau<br>
     Georgia Institute of Technology &middot; Team 002
   </p>
-
-  <div class="password-group">
-    <input type="password" id="password" placeholder="Enter password" autocomplete="off"
-           onkeydown="if(event.key==='Enter')checkPassword()">
-  </div>
-  <div class="error" id="error">Incorrect password. Try again.</div>
-  <button class="btn btn-primary" onclick="checkPassword()">Enter</button>
-</div>
-
-<!-- ===== MENU PAGE ===== -->
-<div class="page" id="menu-page">
-  <div class="eyebrow">CSE 6242 &middot; Team 002</div>
-  <h1>The <span class="highlight">Recovery</span><br>is an Illusion</h1>
-  <p class="welcome">Select a deliverable to view</p>
 
   <div class="menu-cards">
     <a href="dashboard.html" class="menu-card">
@@ -296,36 +281,6 @@
 <div class="footer">
   Georgia Institute of Technology &middot; CSE 6242 &middot; Spring 2026
 </div>
-
-<script>
-  const PASSWORD_HASH = 'a36517544f974b842093e660c9545cd4fd96f10c150f2247179d81bbf04e2ef0';
-
-  async function sha256(text) {
-    const data = new TextEncoder().encode(text);
-    const hash = await crypto.subtle.digest('SHA-256', data);
-    return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
-  }
-
-  async function checkPassword() {
-    const input = document.getElementById('password').value;
-    const hash = await sha256(input);
-    if (hash === PASSWORD_HASH) {
-      sessionStorage.setItem('authenticated', 'true');
-      document.getElementById('login-page').style.display = 'none';
-      document.getElementById('menu-page').style.display = 'block';
-    } else {
-      document.getElementById('error').style.display = 'block';
-      document.getElementById('password').value = '';
-      document.getElementById('password').focus();
-    }
-  }
-
-  // Restore session if already authenticated
-  if (sessionStorage.getItem('authenticated') === 'true') {
-    document.getElementById('login-page').style.display = 'none';
-    document.getElementById('menu-page').style.display = 'block';
-  }
-</script>
 
 </body>
 </html>
